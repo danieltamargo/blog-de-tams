@@ -1,242 +1,239 @@
 ---
-title: "SOLID Principles Explained with Fun Examples"
-description: "Understanding SOLID principles through real-world scenarios and code examples"
-date: "2024-04-11"
-tags: ["programming", "software-design", "architecture", "tutorial"]
+title: "Principios SOLID"
+description: "Entendiendo los principios SOLID a través de ejemplos de código"
+date: "2024-11-09"
+tags: ["programación", "diseño de software", "arquitectura", "tutorial"]
 ---
+¿Alguna vez has pensado en escribir código que no haga que tu “yo” del futuro quiera viajar en el tiempo y pegarle al “yo” actual? ¡Llegan los principios SOLID al rescate! Vamos a explicarlos con algunos ejemplos divertidos.
 
-# SOLID Principles: Your Code's Best Friend
+## Principio de Responsabilidad Única (SRP)
 
-Ever wondered how to write code that doesn't make future-you want to time travel and slap present-you? Enter SOLID principles! Let's break them down with some fun examples.
-
-## Single Responsibility Principle (SRP)
-
-Think of this as the "one job" rule. Like a pizza chef who only makes pizzas and doesn't also try to be the waiter, accountant, and DJ.
+Piensa en esto como la regla de “un solo trabajo”. Como un chef de pizzas que solo hace pizzas, y no intenta también ser el camarero, el contable y el DJ.
 
 ```typescript
-// 🚫 Bad: One class doing multiple things
-class SuperHero {
-  name: string;
+// 🚫 Malo: Una clase haciendo de todo
+class SuperHeroe {
+  nombre: string;
   
-  constructor(name: string) {
-    this.name = name;
+  constructor(nombre: string) {
+    this.nombre = nombre;
   }
   
-  saveTheWorld() {
-    // Fighting bad guys
+  salvarElMundo() {
+    // Luchando contra los malos
   }
   
-  writeReport() {
-    // Doing paperwork
+  escribirInforme() {
+    // Haciendo papeleo
   }
   
-  managePR() {
-    // Handling press conferences
+  gestionarRRPP() {
+    // Atendiendo conferencias de prensa
   }
 }
 
-// ✅ Good: Each class has one responsibility
-class SuperHero {
-  name: string;
+// ✅ Bueno: Cada clase tiene una sola responsabilidad
+class SuperHeroe {
+  nombre: string;
   
-  constructor(name: string) {
-    this.name = name;
+  constructor(nombre: string) {
+    this.nombre = nombre;
   }
   
-  saveTheWorld() {
-    // Just fighting bad guys
+  salvarElMundo() {
+    // Solo luchando contra los malos
   }
 }
 
-class HeroReporter {
-  writeReport(hero: SuperHero) {
-    // Just handling paperwork
+class ReporteroHeroe {
+  escribirInforme(heroe: SuperHeroe) {
+    // Solo manejando el papeleo
   }
 }
 
-class PublicRelationsManager {
-  managePR(hero: SuperHero) {
-    // Just managing public relations
+class GerenteRRPP {
+  gestionarRRPP(heroe: SuperHeroe) {
+    // Solo manejando relaciones públicas
   }
 }
 ```
 
-## Open/Closed Principle (OCP)
+## Principio Abierto/Cerrado (OCP)
 
-Software entities should be open for extension but closed for modification. Like LEGO blocks - you don't break existing blocks to create new things, you just add more blocks!
+Las entidades de software deben estar abiertas para extensión pero cerradas para modificación. Como bloques de LEGO: no rompes bloques existentes para hacer cosas nuevas, ¡solo agregas más bloques!
 
 ```typescript
-// 🚫 Bad: Need to modify class for new shapes
-class AreaCalculator {
-  calculateArea(shape: string, width: number, height: number) {
-    if (shape === 'rectangle') {
-      return width * height;
-    } else if (shape === 'circle') {
-      return Math.PI * width * width;
+// 🚫 Malo: Necesita modificar la clase para nuevas formas
+class CalculadoraArea {
+  calcularArea(figura: string, ancho: number, alto: number) {
+    if (figura === 'rectángulo') {
+      return ancho * alto;
+    } else if (figura === 'círculo') {
+      return Math.PI * ancho * ancho;
     }
-    // Need to modify this class for each new shape!
+    // ¡Hay que modificar esta clase para cada nueva figura!
   }
 }
 
-// ✅ Good: Just add new shapes by implementing the interface
-interface Shape {
-  calculateArea(): number;
+// ✅ Bueno: Solo añade nuevas figuras implementando la interfaz
+interface Figura {
+  calcularArea(): number;
 }
 
-class Rectangle implements Shape {
-  constructor(private width: number, private height: number) {}
+class Rectangulo implements Figura {
+  constructor(private ancho: number, private alto: number) {}
   
-  calculateArea(): number {
-    return this.width * this.height;
+  calcularArea(): number {
+    return this.ancho * this.alto;
   }
 }
 
-class Circle implements Shape {
-  constructor(private radius: number) {}
+class Circulo implements Figura {
+  constructor(private radio: number) {}
   
-  calculateArea(): number {
-    return Math.PI * this.radius * this.radius;
+  calcularArea(): number {
+    return Math.PI * this.radio * this.radio;
   }
 }
 ```
 
-## Liskov Substitution Principle (LSP)
+## Principio de Sustitución de Liskov (LSP)
 
-If it looks like a duck, quacks like a duck, but needs batteries - you probably have the wrong abstraction!
+Si parece un pato, hace “cuac” como un pato, pero necesita pilas… ¡probablemente tienes la abstracción equivocada!
 
 ```typescript
-// 🚫 Bad: Penguin can't fly!
-class Bird {
-  fly() {
-    // Flying implementation
+// 🚫 Malo: ¡El pingüino no puede volar!
+class Ave {
+  volar() {
+    // Implementación de vuelo
   }
 }
 
-class Penguin extends Bird {
-  fly() {
-    throw new Error("Help! I can't fly!"); // Violates LSP
+class Pinguino extends Ave {
+  volar() {
+    throw new Error("¡Ayuda! ¡No puedo volar!"); // Viola LSP
   }
 }
 
-// ✅ Good: Proper hierarchy
-interface Bird {
-  move(): void;
+// ✅ Bueno: Jerarquía adecuada
+interface Ave {
+  mover(): void;
 }
 
-class FlyingBird implements Bird {
-  move() {
-    this.fly();
+class AveVoladora implements Ave {
+  mover() {
+    this.volar();
   }
   
-  private fly() {
-    // Flying implementation
+  private volar() {
+    // Implementación de vuelo
   }
 }
 
-class SwimmingBird implements Bird {
-  move() {
-    this.swim();
+class AveNadadora implements Ave {
+  mover() {
+    this.nadar();
   }
   
-  private swim() {
-    // Swimming implementation
+  private nadar() {
+    // Implementación de nado
   }
 }
 ```
 
-## Interface Segregation Principle (ISP)
+## Principio de Segregación de Interfaces (ISP)
 
-Don't make someone pay for a full meal when they only want a sandwich. Split interfaces into smaller, specific ones.
+No hagas que alguien pague por un menú completo cuando solo quiere un bocadillo. Divide las interfaces en partes más pequeñas y específicas.
 
 ```typescript
-// 🚫 Bad: One large interface
-interface SmartDevice {
-  call(): void;
-  sendEmail(): void;
-  browseInternet(): void;
-  takePicture(): void;
-  playMusic(): void;
+// 🚫 Malo: Una sola interfaz grande
+interface DispositivoInteligente {
+  llamar(): void;
+  enviarCorreo(): void;
+  navegarInternet(): void;
+  tomarFoto(): void;
+  reproducirMusica(): void;
 }
 
-// ✅ Good: Segregated interfaces
-interface Phone {
-  call(): void;
+// ✅ Bueno: Interfaces segregadas
+interface Telefono {
+  llamar(): void;
 }
 
-interface EmailClient {
-  sendEmail(): void;
+interface ClienteCorreo {
+  enviarCorreo(): void;
 }
 
-interface WebBrowser {
-  browseInternet(): void;
+interface NavegadorWeb {
+  navegarInternet(): void;
 }
 
-interface Camera {
-  takePicture(): void;
+interface Camara {
+  tomarFoto(): void;
 }
 
-interface MusicPlayer {
-  playMusic(): void;
+interface ReproductorMusica {
+  reproducirMusica(): void;
 }
 
-// Now devices can implement only what they need
-class Smartphone implements Phone, EmailClient, WebBrowser, Camera, MusicPlayer {
-  // Implementation
+// Ahora los dispositivos pueden implementar solo lo que necesitan
+class Smartphone implements Telefono, ClienteCorreo, NavegadorWeb, Camara, ReproductorMusica {
+  // Implementación
 }
 
-class OldSchoolPhone implements Phone {
-  // Just calling functionality
+class TelefonoViejo implements Telefono {
+  // Solo función de llamada
 }
 ```
 
-## Dependency Inversion Principle (DIP)
+## Principio de Inversión de Dependencias (DIP)
 
-High-level modules shouldn't depend on low-level modules. Both should depend on abstractions. Like using a power outlet - you don't hardwire your laptop directly to the power plant!
+Los módulos de alto nivel no deberían depender de los módulos de bajo nivel. Ambos deberían depender de abstracciones. Como un enchufe de pared: no conectas tu laptop directamente a la planta de energía.
 
 ```typescript
-// 🚫 Bad: Direct dependency on low-level module
-class NotificationService {
-  private emailSender = new EmailSender();
+// 🚫 Malo: Dependencia directa en módulo de bajo nivel
+class ServicioNotificaciones {
+  private enviadorCorreo = new EnviadorCorreo();
   
-  sendNotification(message: string) {
-    this.emailSender.sendEmail(message);
+  enviarNotificacion(mensaje: string) {
+    this.enviadorCorreo.enviarCorreo(mensaje);
   }
 }
 
-// ✅ Good: Depending on abstraction
-interface MessageSender {
-  send(message: string): void;
+// ✅ Bueno: Dependiendo de la abstracción
+interface EnviadorMensajes {
+  enviar(mensaje: string): void;
 }
 
-class EmailSender implements MessageSender {
-  send(message: string) {
-    // Send email
+class EnviadorCorreo implements EnviadorMensajes {
+  enviar(mensaje: string) {
+    // Enviar correo
   }
 }
 
-class SMSSender implements MessageSender {
-  send(message: string) {
-    // Send SMS
+class EnviadorSMS implements EnviadorMensajes {
+  enviar(mensaje: string) {
+    // Enviar SMS
   }
 }
 
-class NotificationService {
-  constructor(private messageSender: MessageSender) {}
+class ServicioNotificaciones {
+  constructor(private enviadorMensajes: EnviadorMensajes) {}
   
-  sendNotification(message: string) {
-    this.messageSender.send(message);
+  enviarNotificacion(mensaje: string) {
+    this.enviadorMensajes.enviar(mensaje);
   }
 }
 ```
 
-## Conclusion
+## Conclusión
 
-Following SOLID principles might seem like extra work at first, but it's like brushing your teeth - a small daily investment that prevents painful problems later! Remember:
+Seguir los principios SOLID puede parecer trabajo extra al principio, pero es como cepillarse los dientes: una pequeña inversión diaria que evita problemas dolorosos más adelante. Recuerda:
 
-- Single Responsibility: One job per class
-- Open/Closed: Add new features without changing existing code
-- Liskov Substitution: Subtypes should be substitutable for their base types
-- Interface Segregation: Small, specific interfaces are better than one big interface
-- Dependency Inversion: Depend on abstractions, not concrete implementations
+- Responsabilidad Única: Una tarea por clase
+- Abierto/Cerrado: Añade nuevas características sin cambiar el código existente
+- Sustitución de Liskov: Los subtipos deben poder sustituirse por sus tipos base
+- Segregación de Interfaces: Mejor interfaces pequeñas y específicas que una grande
+- Inversión de Dependencias: Depende de abstracciones, no implementaciones concretas
 
-Happy coding! 🚀
+¡Feliz codificación! 🚀

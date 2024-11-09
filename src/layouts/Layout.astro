@@ -2,7 +2,9 @@
 import BackgroundPattern from '../components/BackgroundPattern.astro';
 import Navigation from '../components/Navigation.astro';
 import Footer from '../components/Footer.astro';
-import { ViewTransitions } from 'astro:transitions';
+import { ViewTransitions, fade } from 'astro:transitions';
+import { Image } from 'astro:assets';
+import ProfilePic from "@assets/daniel-tamargo.jpeg";
 
 interface Props {
 	title: string;
@@ -23,10 +25,33 @@ const { title } = Astro.props;
 		<ViewTransitions />
 	</head>
 	<body class="min-h-screen bg-gray-50 flex flex-col">
-		<BackgroundPattern />
-		<Navigation />
-		<slot />
-		<Footer />
+		<BackgroundPattern transition:animate={fade({ duration: '0' })} />
+		<Navigation transition:animate={fade({ duration: '0' })} />
+		<!-- Personal card aside -->
+		<div class="flex justify-center gap-2 py-12">
+			<aside 
+			class="relative z-10 max-w-72 h-fit backdrop-blur-sm rounded-xl p-6 bg-white/80 shadow-sm border border-gray-100 hover:shadow-md transition-shadow" 
+			transition:animate={fade({ duration: '0' })}
+			>
+				<div class="relative w-56 h-56 mb-4">
+					<Image
+					src={ProfilePic} 
+					alt="Avatar" 
+					class="h-full w-full rounded-2xl mx-auto mb-4 shadow-sm object-cover" 
+					/>
+					<h2 class="absolute bottom-0 right-0 bg-gray-800 text-white p-2 text-xl font-bold rounded-tl-2xl rounded-br-2xl">
+						Daniel Tamargo
+					</h2>
+				</div>
+
+				<p class="text-gray-700"><b>¡Hola! 👋</b> Soy un desarrollador apasionado por la tecnología.</p>
+			</aside>
+	
+			<div class="max-w-4xl">
+				<slot />
+			</div>
+		</div>
+		<Footer transition:animate={fade({ duration: '0' })} />
 	</body>
 </html>
 <style is:global>
