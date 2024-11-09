@@ -1,0 +1,52 @@
+---
+import Layout from './Layout.astro';
+import Blog from '@components/Blog.astro';
+import { getCollection } from 'astro:content';
+
+const { frontmatter } = Astro.props;
+
+// Obtener todas las publicaciones y ordenarlas por fecha
+const posts = await getCollection('blog');
+const sortedPosts = posts.sort((a, b) => 
+  new Date(b.data.date).getTime() - new Date(a.data.date).getTime()
+);
+
+// Encontrar el índice del post actual
+const currentIndex = sortedPosts.findIndex(post => post.data.title === frontmatter.title);
+const prevPost = currentIndex < sortedPosts.length - 1 ? sortedPosts[currentIndex + 1] : null;
+const nextPost = currentIndex > 0 ? sortedPosts[currentIndex - 1] : null;
+
+// Obtener y configurar la animación en función de la dirección de navegación
+const direction = Astro.cookies.get('blog-navigation-direction')?.value;
+Astro.cookies.delete('blog-navigation-direction');
+
+const blogAnimation = {
+  old: {
+    name: direction === 'backward' ? 'slide-from-left' : 'slide-from-right',
+    duration: '200ms',
+    easing: 'ease-in',
+    direction: 'reverse',
+  },
+  new: {
+    name: direction === 'backward' ? 'slide-from-right' : 'slide-from-left',
+    duration: '200ms',
+    easing: 'ease-in-out',
+  },
+};
+
+const customTransition = {
+  forwards: blogAnimation,
+  backwards: blogAnimation,
+};
+---
+
+<Layout title={frontmatter.title}>
+  <Blog 
+    frontmatter={frontmatter} 
+    prevPost={prevPost} 
+    nextPost={nextPost} 
+    animation={customTransition} 
+  >
+    <slot />  
+  </Blog>
+</Layout>

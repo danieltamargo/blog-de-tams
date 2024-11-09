@@ -1,0 +1,17 @@
+---
+import { getEntryBySlug } from 'astro:content';
+import BlogLayout from '../../layouts/BlogLayout.astro';
+
+const { slug } = Astro.params;
+const post = await getEntryBySlug('blog', slug);
+
+if (!post) {
+  throw new Error(`Post no encontrado: ${slug}`);
+}
+
+const { Content } = await post.render();
+---
+
+<BlogLayout frontmatter={post.data}>
+  <Content />
+</BlogLayout>

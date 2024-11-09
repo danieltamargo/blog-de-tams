@@ -1,0 +1,242 @@
+---
+title: "SOLID Principles Explained with Fun Examples"
+description: "Understanding SOLID principles through real-world scenarios and code examples"
+date: "2024-04-11"
+tags: ["programming", "software-design", "architecture", "tutorial"]
+---
+
+# SOLID Principles: Your Code's Best Friend
+
+Ever wondered how to write code that doesn't make future-you want to time travel and slap present-you? Enter SOLID principles! Let's break them down with some fun examples.
+
+## Single Responsibility Principle (SRP)
+
+Think of this as the "one job" rule. Like a pizza chef who only makes pizzas and doesn't also try to be the waiter, accountant, and DJ.
+
+```typescript
+// 🚫 Bad: One class doing multiple things
+class SuperHero {
+  name: string;
+  
+  constructor(name: string) {
+    this.name = name;
+  }
+  
+  saveTheWorld() {
+    // Fighting bad guys
+  }
+  
+  writeReport() {
+    // Doing paperwork
+  }
+  
+  managePR() {
+    // Handling press conferences
+  }
+}
+
+// ✅ Good: Each class has one responsibility
+class SuperHero {
+  name: string;
+  
+  constructor(name: string) {
+    this.name = name;
+  }
+  
+  saveTheWorld() {
+    // Just fighting bad guys
+  }
+}
+
+class HeroReporter {
+  writeReport(hero: SuperHero) {
+    // Just handling paperwork
+  }
+}
+
+class PublicRelationsManager {
+  managePR(hero: SuperHero) {
+    // Just managing public relations
+  }
+}
+```
+
+## Open/Closed Principle (OCP)
+
+Software entities should be open for extension but closed for modification. Like LEGO blocks - you don't break existing blocks to create new things, you just add more blocks!
+
+```typescript
+// 🚫 Bad: Need to modify class for new shapes
+class AreaCalculator {
+  calculateArea(shape: string, width: number, height: number) {
+    if (shape === 'rectangle') {
+      return width * height;
+    } else if (shape === 'circle') {
+      return Math.PI * width * width;
+    }
+    // Need to modify this class for each new shape!
+  }
+}
+
+// ✅ Good: Just add new shapes by implementing the interface
+interface Shape {
+  calculateArea(): number;
+}
+
+class Rectangle implements Shape {
+  constructor(private width: number, private height: number) {}
+  
+  calculateArea(): number {
+    return this.width * this.height;
+  }
+}
+
+class Circle implements Shape {
+  constructor(private radius: number) {}
+  
+  calculateArea(): number {
+    return Math.PI * this.radius * this.radius;
+  }
+}
+```
+
+## Liskov Substitution Principle (LSP)
+
+If it looks like a duck, quacks like a duck, but needs batteries - you probably have the wrong abstraction!
+
+```typescript
+// 🚫 Bad: Penguin can't fly!
+class Bird {
+  fly() {
+    // Flying implementation
+  }
+}
+
+class Penguin extends Bird {
+  fly() {
+    throw new Error("Help! I can't fly!"); // Violates LSP
+  }
+}
+
+// ✅ Good: Proper hierarchy
+interface Bird {
+  move(): void;
+}
+
+class FlyingBird implements Bird {
+  move() {
+    this.fly();
+  }
+  
+  private fly() {
+    // Flying implementation
+  }
+}
+
+class SwimmingBird implements Bird {
+  move() {
+    this.swim();
+  }
+  
+  private swim() {
+    // Swimming implementation
+  }
+}
+```
+
+## Interface Segregation Principle (ISP)
+
+Don't make someone pay for a full meal when they only want a sandwich. Split interfaces into smaller, specific ones.
+
+```typescript
+// 🚫 Bad: One large interface
+interface SmartDevice {
+  call(): void;
+  sendEmail(): void;
+  browseInternet(): void;
+  takePicture(): void;
+  playMusic(): void;
+}
+
+// ✅ Good: Segregated interfaces
+interface Phone {
+  call(): void;
+}
+
+interface EmailClient {
+  sendEmail(): void;
+}
+
+interface WebBrowser {
+  browseInternet(): void;
+}
+
+interface Camera {
+  takePicture(): void;
+}
+
+interface MusicPlayer {
+  playMusic(): void;
+}
+
+// Now devices can implement only what they need
+class Smartphone implements Phone, EmailClient, WebBrowser, Camera, MusicPlayer {
+  // Implementation
+}
+
+class OldSchoolPhone implements Phone {
+  // Just calling functionality
+}
+```
+
+## Dependency Inversion Principle (DIP)
+
+High-level modules shouldn't depend on low-level modules. Both should depend on abstractions. Like using a power outlet - you don't hardwire your laptop directly to the power plant!
+
+```typescript
+// 🚫 Bad: Direct dependency on low-level module
+class NotificationService {
+  private emailSender = new EmailSender();
+  
+  sendNotification(message: string) {
+    this.emailSender.sendEmail(message);
+  }
+}
+
+// ✅ Good: Depending on abstraction
+interface MessageSender {
+  send(message: string): void;
+}
+
+class EmailSender implements MessageSender {
+  send(message: string) {
+    // Send email
+  }
+}
+
+class SMSSender implements MessageSender {
+  send(message: string) {
+    // Send SMS
+  }
+}
+
+class NotificationService {
+  constructor(private messageSender: MessageSender) {}
+  
+  sendNotification(message: string) {
+    this.messageSender.send(message);
+  }
+}
+```
+
+## Conclusion
+
+Following SOLID principles might seem like extra work at first, but it's like brushing your teeth - a small daily investment that prevents painful problems later! Remember:
+
+- Single Responsibility: One job per class
+- Open/Closed: Add new features without changing existing code
+- Liskov Substitution: Subtypes should be substitutable for their base types
+- Interface Segregation: Small, specific interfaces are better than one big interface
+- Dependency Inversion: Depend on abstractions, not concrete implementations
+
+Happy coding! 🚀
