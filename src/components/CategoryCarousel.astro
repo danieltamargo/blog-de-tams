@@ -26,8 +26,7 @@ const categories = [
   }
 ];
 ---
-
-<div id="category-carousel" class="relative overflow-hidden py-8 bg-white/40 backdrop-blur-sm rounded-xl shadow-sm border border-gray-100 mb-12" transition:persist>
+<div id="category-carousel" class="max-w-full relative overflow-hidden py-8 bg-white/40 backdrop-blur-sm rounded-xl shadow-sm border border-gray-100 mb-12" transition:persist>
   <div class="carousel-track flex transition-transform duration-500 ease-out">
     {categories.map((category) => (
       <div class="w-full flex-none px-4">
