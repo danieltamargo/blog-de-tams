@@ -3,6 +3,10 @@ export default {
   content: ['./src/**/*.{astro,html,js,jsx,md,mdx,svelte,ts,tsx,vue}'],
   theme: {
     extend: {
+      width: {
+        '4xl': '56rem',
+        '7xl': '86rem',
+      },
       typography: {
         DEFAULT: {
           css: {
