@@ -1,61 +1,129 @@
 ---
 const categories = [
   {
-    name: 'News',
-    description: 'Stay ahead of the curve with the latest tech announcements, releases, and industry updates. Because FOMO in tech is real! 🚀',
-    gradient: 'from-blue-600 to-blue-400',
-    icon: '📰'
+    name: "Blogs, noticias y opiniones",
+    description:
+      "El mundo cambio y no se detiene, sobre todo en el ámbito tecnológico. Veamos y analicemos puntos interesantes para seguir impulsando nuestro saber 🚀",
+    gradient: "from-blue-600 to-blue-400",
+    quote: {
+      text: "La única constante en la tecnología es <b>el cambio</b>.",
+      author: "Marc Benioff, CEO de Salesforce",
+    },
+    icon: "📰",
   },
   {
-    name: 'Tips & Tricks',
-    description: 'Level up your coding game with time-saving hacks and productivity boosters. Your future self will thank you! 💡',
-    gradient: 'from-green-600 to-green-400',
-    icon: '💪'
+    name: "Profundizando en conceptos técnicos",
+    description:
+      'Profundicemos 🤿 en algunos conceptos técnicos, desde algoritmos y estructuras de datos hasta ciberseguridad y más.',
+    gradient: "from-purple-600 to-purple-400",
+    quote: {
+      text: "Cuanto más aprendo, más veo lo que me falta por aprender, y eso solo me <b>motiva</b> a seguir aprendiendo.",
+      author: "Daniel Tamargo",
+    },
+    icon: "🔬",
   },
   {
-    name: 'Technical Deep Dives',
-    description: 'Dive deep into complex technical concepts, because understanding the "why" is just as important as the "how". 🤿',
-    gradient: 'from-purple-600 to-purple-400',
-    icon: '🔬'
+    name: "Fitness",
+    description: 
+      "¡Programar no lo es todo! Vamos a <b>mantenernos en forma</b> y saludables para poder seguir creando cosas increíbles.",
+    quote: {
+      text: "Un gran poder conlleva una gran responsabilidad",
+      author: "Ben Parker",
+    },
+    gradient: "from-green-600 to-green-400",
+    icon: "💪",
   },
   {
-    name: 'Interesting Finds',
-    description: 'Discover cool projects, hidden gems, and mind-blowing dev tools that make coding more fun! ✨',
-    gradient: 'from-pink-600 to-pink-400',
-    icon: '🎯'
-  }
+    name: "Sobre mí",
+    description:
+      "Si quieres saber un poco más sobre mí, conocer mis intereses y motivaciones, haz clic en ese botoncito de abajo.",
+    gradient: "from-pink-600 to-pink-400",
+    icon: "👨‍💻",
+  },
 ];
 ---
-<div class="gap-2">
-  <div id="category-carousel" class="relative overflow-hidden py-8 mb-12 bg-white/40 backdrop-blur-sm rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition-shadow" transition:persist>
-    <div class="carousel-track max-w-full flex transition-transform duration-500 ease-out">
-      {categories.map((category) => (
+<div
+  id="category-carousel"
+  class="relative overflow-hidden py-8 mb-12 bg-white/40 backdrop-blur-sm rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition-shadow"
+  transition:persist
+>
+  <!-- Barra de progreso para ver siguiente categoría -->
+  <div class="absolute top-4 left-1/2 -translate-x-1/2">
+    <div class="w-9 h-2 bg-gray-300 rounded-full overflow-hidden">
+      <div 
+      class="h-full transition-transform duration-500 ease-out bg-gradient-to-br" 
+      id="carousel-next-category-progress-bar"
+      data-animation-name="carousel-next-category-progress-animation"
+      />
+    </div>
+  </div>
+
+  <!-- Carrousel de categorías -->
+  <div class="carousel-track max-w-full flex transition-transform duration-500 ease-out">
+    {
+      categories.map((category) => (
         <div class="w-full flex-none px-4">
-          <div class={`h-full p-6 rounded-lg bg-gradient-to-br ${category.gradient} text-white`}>
-            <div class="text-4xl mb-2">{category.icon}</div>
+          <div
+            class={`h-full p-6 rounded-lg bg-gradient-to-br ${category.gradient} text-white relative`}
+          >
+            <div class="text-4xl absolute top-0 left-0 -translate-y-2/3">{category.icon}</div>
             <h3 class="text-2xl font-bold mb-2">{category.name}</h3>
-            <p class="text-white/90">{category.description}</p>
+            <p class="text-white">{category.description}</p>
+            {category.quote && (
+              <blockquote class="text-sm text-white/90 mt-4">
+                <p class="flex flex-col">
+                  <span>
+                    "<span class="italic" set:html={category.quote.text}></span>"
+                  </span>
+                  <span set:html={category.quote.author}></span>
+                </p>
+              </blockquote>
+            )}
           </div>
         </div>
-      ))}
-    </div>
-    
-    <div class="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2">
-      {categories.map((_, index) => (
+      ))
+    }
+  </div>
+
+  <!-- Selector de categorías -->
+  <div class="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2">
+    {
+      categories.map((_, index) => (
         <button
           class="w-2 h-2 rounded-full bg-gray-300 transition-colors duration-300 carousel-dot"
           data-index={index}
+          data-category-bg={categories[index].gradient}
           aria-label={`Go to slide ${index + 1}`}
         />
-      ))}
-    </div>
+      ))
+    }
   </div>
 </div>
 
-<script type="module">
-  const carousel = document.querySelector('#category-carousel');
-  const track = document.querySelector('.carousel-track');
-  const dots = document.querySelectorAll('.carousel-dot');
+<style>
+  #carousel-next-category-progress-bar {
+    width: 0;
+    transition: background-color 500ms;
+  }
+
+  @keyframes carousel-next-category-progress-animation {
+    0% {
+      width: 0;
+    }
+    100% {
+      width: 100%;
+    }
+  }
+</style>
+
+<script is:inline type="module">
+  console.log("Carousel loaded");
+
+  const carousel = document.querySelector("#category-carousel");
+  const track = document.querySelector(".carousel-track");
+  const dots = document.querySelectorAll(".carousel-dot");
+  const progressBar = document.getElementById("carousel-next-category-progress-bar");
+
   const slideCount = dots.length;
   let currentIndex = 0;
   const carouselIntervalTime = 4000;
@@ -67,23 +135,41 @@ const categories = [
   let pausedTime = 0;
   let carouselIntervalStartedAt = null;
 
+  let prevProgressBarBg = null;
+
   function updateCarousel() {
     if (!track) return;
-    
+
     pausedTime = 0;
     resumeCarouselTime = carouselIntervalTime;
     carouselIntervalStartedAt = Date.now();
     track.style.transform = `translateX(-${currentIndex * 100}%)`;
-    
+
     dots.forEach((dot, index) => {
       if (index === currentIndex) {
-        dot.classList.add('bg-gray-800');
-        dot.classList.remove('bg-gray-300');
+        dot.classList.add("bg-gray-800");
+        dot.classList.remove("bg-gray-300");
       } else {
-        dot.classList.add('bg-gray-300');
-        dot.classList.remove('bg-gray-800');
+        dot.classList.add("bg-gray-300");
+        dot.classList.remove("bg-gray-800");
       }
     });
+
+    // Reiniciar la barra de progreso
+    const categoryBg = dots[currentIndex].dataset.categoryBg;
+    if (!progressBar) return;
+
+    // Eliminar clases de gradientes anteriores
+    if (prevProgressBarBg) progressBar.classList.remove(...prevProgressBarBg.split(" "));
+    prevProgressBarBg = categoryBg;
+
+    progressBar.classList.add(...categoryBg.split(" "));
+    progressBar.style.animation = "none";
+    void progressBar.offsetWidth;
+    progressBar.style.animationName = progressBar.dataset.animationName;
+    progressBar.style.animationDuration = `${carouselIntervalTime}ms`;
+    progressBar.style.animationTimingFunction = "ease";
+    progressBar.style.animationFillMode = "forwards";
   }
 
   function carouselIntervalFunc() {
@@ -95,27 +181,36 @@ const categories = [
     carouselInterval = setInterval(carouselIntervalFunc, carouselIntervalTime);
 
     dots.forEach((dot, index) => {
-      dot.addEventListener('click', () => {
+      dot.addEventListener("click", () => {
         currentIndex = index;
         updateCarousel();
       });
     });
 
-    carousel.addEventListener('mouseenter', () => {
-      pausedTime += carouselIntervalStartedAt ? Date.now() - carouselIntervalStartedAt : 0;
+    carousel.addEventListener("mouseenter", () => {
+      pausedTime += carouselIntervalStartedAt
+        ? Date.now() - carouselIntervalStartedAt
+        : 0;
+
+      progressBar.style.animationPlayState = "paused";
 
       if (carouselInterval) clearInterval(carouselInterval);
       if (resumeCarouselTimeout) clearTimeout(resumeCarouselTimeout);
     });
 
-    carousel.addEventListener('mouseleave', () => {
+    carousel.addEventListener("mouseleave", () => {
       let remainigTime = resumeCarouselTime - pausedTime;
       carouselIntervalStartedAt = Date.now();
       remainigTime = remainigTime < 0 ? 0 : remainigTime;
 
+      progressBar.style.animationPlayState = "running";
+
       resumeCarouselTimeout = setTimeout(() => {
         carouselIntervalFunc();
-        carouselInterval = setInterval(carouselIntervalFunc, carouselIntervalTime);
+        carouselInterval = setInterval(
+          carouselIntervalFunc,
+          carouselIntervalTime,
+        );
       }, remainigTime);
     });
 

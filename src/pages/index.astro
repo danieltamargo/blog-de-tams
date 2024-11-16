@@ -3,15 +3,16 @@ import Layout from '../layouts/Layout.astro';
 import CategoryCarousel from '../components/CategoryCarousel.astro';
 import { getCollection } from 'astro:content';
 import { format } from 'date-fns';
+import AStarAlgorithm from '@components/specials/AStarAlgorithm.astro';
 
 const posts = await getCollection('blog');
 posts.sort((a, b) => new Date(b.data.date).getTime() - new Date(a.data.date).getTime());
 ---
 
-<Layout title="Developer Blog">
+<Layout title="Blogsky">
   <CategoryCarousel />
-  
-  <div class="space-y-8">
+
+  <div class="space-y-4">
     {posts.map((post) => (
       <article class="bg-white/80 backdrop-blur-sm rounded-xl p-6 shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
         <h2 class="text-3xl font-bold mb-2">
@@ -36,5 +37,7 @@ posts.sort((a, b) => new Date(b.data.date).getTime() - new Date(a.data.date).get
         )}
       </article>
     ))}
+
+    <AStarAlgorithm />
   </div>
 </Layout>
