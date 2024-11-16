@@ -1,0 +1,1190 @@
+---
+import ButtonPrimary from "@components/ButtonPrimary.astro";
+
+
+---
+
+<div
+  class="relative mb-12"
+  transition:persist
+>
+  <div id="algorithm-container">
+    <div class="controls">
+      <div class="config-hud">
+        <ButtonPrimary id="start">Empezar</ButtonPrimary>
+        <ButtonPrimary id="clear">Limpiar</ButtonPrimary>
+
+        <div class="cb-container ml-auto">
+          <input
+            type="checkbox"
+            name="cb-allow-diagonal-movement"
+            id="cb-allow-diagonal-movement"
+            checked
+          />
+          <label for="cb-allow-diagonal-movement"
+            >Permitir movimiento en diagonal</label
+          >
+        </div>
+      </div>
+
+      <div class="game-hud !hidden">
+        <button id="next">Siguiente</button>
+        <button id="reset">Reiniciar</button>
+        <button id="exit">Salir</button>
+
+        <div class="cb-container ml-auto">
+          <input type="checkbox" name="cb-show-arrows" id="cb-show-arrows" />
+          <label for="cb-show-arrows">Mostrar las flechas</label>
+        </div>
+      </div>
+    </div>
+    <div 
+    id="algorithm-grid-container"
+    class="preparing"
+    data-component="a-star-algorithm"
+    ></div>
+    <div id="algorithm-results"></div>
+  </div>
+</div>
+
+<script type="module">
+  // Variables globales (a la mayoría se les asigna valor inicial en la función resetVariables)
+  let gameIsOn; // Boolean
+  let gameIsOver; // Boolean
+  let calculatedBoxes; // Array
+  let checkedBoxes; // Array
+  // let blockedBoxes // Array // No tiene pinta de que haga falta, podemos jugar con la clase .block-cell
+  let startBox; // Object
+  let finishBox; // Object
+  let nextBox; // Object
+  let steps; // Number
+  let diagonalMovementIsAllowed = true; // Boolean
+
+  // Constantes de coste
+  const RECT_COST = 10;
+  const DIAGONAL_COST = Math.sqrt(
+    Math.pow(RECT_COST, 2) + Math.pow(RECT_COST, 2),
+  );
+
+  function hideResults() {
+    const algorithmResultsDiv = document.getElementById("algorithm-results");
+    algorithmResultsDiv.classList.remove("show");
+    algorithmResultsDiv.innerHTML = "";
+  }
+
+  function showResults({ totalCost, checkedBoxesQt, calculatedBoxesQt }) {
+    const { rows, columns } = getGridSize();
+    const totalCells = rows * columns - document.querySelectorAll(".block-cell").length - 2; // -2 por casilla inicio y fin
+
+    const algorithmResultsDiv = document.getElementById("algorithm-results");
+    let content = "";
+    if (totalCost) {
+      content += `
+              <div class="ar-card total-cost shadow-lg flex flex-col justify-center items-center p-4 rounded border border-gray-100">
+                  <span class="text-sm text-gray-700">coste total</span>
+                  <h3 class="text-5xl text-gray-800 m-0">${Math.round(totalCost)}</h3>
+              </div>
+          `;
+    }
+
+    if (checkedBoxesQt) {
+      content += `
+              <div class="ar-card shadow-lg flex flex-col justify-center items-center p-4 rounded border border-gray-100">
+                  <span class="text-sm text-gray-700">casillas recorridas</span>
+                  <h3 class="text-5xl text-gray-800 m-0">${checkedBoxesQt} <span class="text-2xl text-gray-500">/ ${totalCells}</span></h3>
+              </div>
+          `;
+    }
+
+    if (calculatedBoxesQt) {
+      content += `
+              <div class="ar-card shadow-lg flex flex-col justify-center items-center p-4 rounded border border-gray-100">
+                  <span class="text-sm text-gray-700">casillas calculadas</span>
+                  <h3 class="text-5xl text-gray-800 m-0">${calculatedBoxesQt} <span class="text-2xl text-gray-500">/ ${totalCells}</span></h3>
+              </div>
+          `;
+    }
+    algorithmResultsDiv.classList.add("show");
+    algorithmResultsDiv.innerHTML = content;
+  }
+
+  function getGridSize() {
+    return {
+      rows: 5,
+      columns: 7,
+    };
+  }
+
+  function createGrid(columns, rows) {
+    const grid = document.createElement("div");
+    grid.classList.add("board-grid");
+    grid.style = `--columns: ${columns}; --rows: ${rows}`;
+    grid.style.gridTemplateColumns = `repeat(${columns}, auto)`;
+    grid.style.gridTemplateRows = `repeat(${rows}, auto)`;
+    return grid;
+  }
+
+  function createCell(row, column, counter) {
+    const cell = document.createElement("div");
+    cell.classList.add("board-cell");
+    cell.dataset.row = String(row);
+    cell.dataset.column = String(column);
+    cell.style = "--counter: " + String(counter);
+    return cell;
+  }
+
+  function addCellsToGrid(grid, columns, rows) {
+    let counter = 0;
+    for (let row = 1; row < rows + 1; row++) {
+      for (let column = 1; column < columns + 1; column++) {
+        const cell = createCell(row, column, counter);
+        grid.appendChild(cell);
+        counter++;
+      }
+    }
+  }
+
+  function generateNewGrid() {
+    const container = document.querySelector("#algorithm-grid-container");
+
+    const { columns, rows } = getGridSize();
+    const grid = createGrid(columns, rows);
+    addCellsToGrid(grid, columns, rows);
+
+    container.innerHTML = "";
+    container.appendChild(grid);
+
+    container.addEventListener("click", gridEventListener);
+  }
+
+  function showGameHUD() {
+    document.querySelector(".game-hud").classList.remove("!hidden");
+  }
+
+  function hideGameHUD() {
+    document.querySelector(".game-hud").classList.add("!hidden");
+  }
+
+  function showConfigHUD() {
+    document.querySelector(".config-hud").classList.remove("!hidden");
+  }
+
+  function hideConfigHUD() {
+    document.querySelector(".config-hud").classList.add("!hidden");
+  }
+
+  function clearAllCalculatedBoxes() {
+    calculatedBoxes.forEach((box) => {
+      box.cell.classList.remove("calculated-cell");
+      box.cell.innerHTML = "";
+    });
+
+    calculatedBoxes = [];
+  }
+
+  function clearAllCheckedBoxes(preserveFirst = false) {
+    checkedBoxes.forEach((box) => {
+      box.cell.classList.remove("checked-cell");
+      box.cell.innerHTML = "";
+    });
+
+    const temp = [];
+    if (preserveFirst) {
+      // Ordenamos por el valor addedAt para obtener la primera que se añadió (la casilla de salida)
+      temp.push(checkedBoxes.sort((a, b) => a.addedAt - b.addedAt)[0]);
+    }
+    checkedBoxes = temp;
+  }
+
+  function clearAllShortestPathCells() {
+    document.querySelectorAll(".shortest-path-cell").forEach((cell) => {
+      cell.classList.remove("shortest-path-cell");
+    });
+  }
+
+  function calculateRemainingCost({ row, column }) {
+    const { row: finishRow, column: finishColumn } = finishBox;
+    let remainingCost = 0;
+
+    let rowsDiff = Math.abs(row - finishRow);
+    let columnsDiff = Math.abs(column - finishColumn);
+
+    while (rowsDiff > 0 && columnsDiff > 0) {
+      rowsDiff--;
+      columnsDiff--;
+      remainingCost += DIAGONAL_COST;
+    }
+
+    while (rowsDiff > 0) {
+      rowsDiff--;
+      remainingCost += RECT_COST;
+    }
+
+    while (columnsDiff > 0) {
+      columnsDiff--;
+      remainingCost += RECT_COST;
+    }
+
+    return remainingCost;
+  }
+
+  function disableNextButton() {
+    nextBtn.disabled = true;
+  }
+
+  function enableNextButton() {
+    nextBtn.disabled = false;
+  }
+
+  function resetVariables() {
+    gameIsOn = false;
+    gameIsOver = false;
+    checkedBoxes = [];
+    // blockedBoxes = []
+    calculatedBoxes = [];
+    startBox = null;
+    finishBox = null;
+    nextBox = null;
+    steps = 0;
+  }
+
+  /**
+   * Limpiar grid
+   */
+  function clear() {
+    resetVariables();
+    generateNewGrid();
+  }
+
+  /**
+   * Salir del modo ejecución algoritmo
+   */
+  function exit() {
+    hideGameHUD();
+    showConfigHUD();
+
+    clearAllCalculatedBoxes();
+    clearAllCheckedBoxes();
+    clearAllShortestPathCells();
+
+    hideResults();
+
+    gameIsOn = false;
+    algorithmGridContainer.classList.add("preparing");
+    algorithmGridContainer.classList.remove("game-finished");
+  }
+
+  /**
+   * Necesitamos partir de un punto, por lo que añadimos la casilla de salida a la lista de casillas comprobadas
+   */
+  function addStartBoxToCheckedBoxes() {
+    const remainigCost = calculateRemainingCost(startBox);
+
+    checkedBoxes.push({
+      ...startBox,
+      remainigCost,
+      totalCost: remainigCost,
+      currentCost: 0,
+      pointingTo: null,
+      addedAt: new Date().getTime(),
+    });
+  }
+
+  /**
+   * Comenzar el modo ejecución algoritmo
+   */
+  function start() {
+    console.log("start");
+    if (!startBox || !finishBox) {
+      window.CustomNotificationManager.addWarningNotification({
+        title: "¡No tan deprisa!",
+        message:
+          "No puedes jugar sin marcar al menos una casilla de inicio y otra de fin.",
+      });
+      return;
+    }
+
+    addStartBoxToCheckedBoxes();
+    enableNextButton();
+
+    showGameHUD();
+    hideConfigHUD();
+
+    gameIsOver = false;
+    gameIsOn = true;
+    steps = 0;
+    finishBox.pointingTo = null;
+    algorithmGridContainer.classList.remove("preparing");
+    algorithmGridContainer.classList.remove("game-finished");
+  }
+
+  function removeAsBlockIfCellIsBlock(target) {
+    if (target.classList.contains("block-cell")) {
+      target.classList.remove("block-cell");
+    }
+  }
+
+  function selectAsStartBox(target) {
+    console.log("selectAsStartBox", target);
+    target.classList.add("start-cell");
+    removeAsBlockIfCellIsBlock(target);
+
+    startBox = {
+      cell: target,
+      row: Number(target.dataset.row),
+      column: Number(target.dataset.column),
+    };
+  }
+
+  function unselectAsStartBox(target) {
+    console.log("unselectAsStartBox", target);
+    target.classList.remove("start-cell");
+    startBox = null;
+  }
+
+  function selectAsFinishBox(target) {
+    console.log("selectAsFinishBox", target);
+    target.classList.add("finish-cell");
+    removeAsBlockIfCellIsBlock(target);
+
+    finishBox = {
+      cell: target,
+      row: Number(target.dataset.row),
+      column: Number(target.dataset.column),
+    };
+  }
+
+  function unselectAsFinishBox(target) {
+    console.log("unselectAsFinishBox", target);
+    target.classList.remove("finish-cell");
+    finishBox = null;
+  }
+
+  function startingGridEventListener(target) {
+    if (startBox?.cell === target) {
+      unselectAsStartBox(target);
+      return;
+    }
+
+    if (finishBox?.cell === target) {
+      unselectAsFinishBox(target);
+      return;
+    }
+
+    if (!startBox) {
+      selectAsStartBox(target);
+      return;
+    }
+
+    if (!finishBox) {
+      selectAsFinishBox(target);
+      return;
+    }
+
+    // Marcar / desmarcar como celda bloque
+    console.log("toggleBlockCell", target);
+    target.classList.toggle("block-cell");
+  }
+
+  /**
+   * Utilizando delegación de eventos añadimos un event listener del clic al grid
+   * Cuando este clic ocurra, en base a la celda presionada ejecutaremos la función startingGridEventListener
+   *
+   * @param { target } object
+   */
+  function gridEventListener({ target }) {
+    if (gameIsOn) {
+      return;
+    }
+
+    if (!target.classList.contains("board-cell")) {
+      return;
+    }
+
+    startingGridEventListener(target);
+  }
+
+  /**
+   * Ordena la lista de casillas indicada (sin mutar la original)
+   * Utilizará el algoritmo que se pase como función
+   *
+   * @param { array } arrayToSort array de boxes a recorrer, será o calculatedBoxes o checkedBoxes
+   * @returns Object | null
+   */
+  function getArrayBoxWithLowerCost(arrayToSort, sortAlgorithm) {
+    if (arrayToSort.length === 0) {
+      return null;
+    }
+
+    const sortedArray = [...arrayToSort];
+    return sortedArray.sort(sortAlgorithm)[0];
+  }
+
+  /**
+   * Crea o actualiza los costes de la celda
+   *
+   * @param { object } calculatedBox
+   */
+  function updateCalculatedBoxDOMCostValues(calculatedBox) {
+    if (calculatedBox.cell.classList.contains("finish-cell")) {
+      return;
+    }
+
+    const currentCostSpan = document.createElement("span");
+    currentCostSpan.classList.add("current-cost");
+    currentCostSpan.innerText = Math.round(calculatedBox.currentCost);
+
+    const remainigCostSpan = document.createElement("span");
+    remainigCostSpan.classList.add("remaining-cost");
+    remainigCostSpan.innerText = Math.round(calculatedBox.remainigCost);
+
+    const totalCostSpan = document.createElement("span");
+    totalCostSpan.classList.add("total-cost");
+    totalCostSpan.innerText = Math.round(calculatedBox.totalCost);
+
+    calculatedBox.cell.innerHTML = "";
+    calculatedBox.cell.appendChild(currentCostSpan);
+    calculatedBox.cell.appendChild(remainigCostSpan);
+    calculatedBox.cell.appendChild(totalCostSpan);
+  }
+
+  function getArrowTextAndStyles(
+    currentRow,
+    currentColumn,
+    pointingToRow,
+    pointingToColumn,
+  ) {
+    const rowDiff = currentRow - pointingToRow;
+    const columnDiff = currentColumn - pointingToColumn;
+
+    // Arriba izquierda
+    if (rowDiff === 1 && columnDiff === 1) {
+      return ["&#8598;", "top: 0; left: 10px;"]; // ↖
+    }
+
+    // Arriba
+    if (rowDiff === 1 && columnDiff === 0) {
+      return ["&#8593;", "top: 2px; left: 50%; transform: translateX(-50%);"]; // ↑
+    }
+
+    // Arriba derecha
+    if (rowDiff === 1 && columnDiff === -1) {
+      return ["&#8599;", "top: 0; right: 10px;"]; // ↗
+    }
+
+    // Derecha
+    if (rowDiff === 0 && columnDiff === -1) {
+      return ["&#8594;", "top: 50%; right: 10px; transform: translateY(-50%);"]; // →
+    }
+
+    // Izquierda
+    if (rowDiff === 0 && columnDiff === 1) {
+      return ["&#8592;", "top: 50%; left: 10px; transform: translateY(-50%);"]; // ←
+    }
+
+    // Abajo izquierda
+    if (rowDiff === -1 && columnDiff === 1) {
+      return ["&#8601;", "bottom: 0; left: 10px;"]; // ↙
+    }
+
+    // Abajo
+    if (rowDiff === -1 && columnDiff === 0) {
+      return ["&#8595;", "bottom: 10px; left: 50%; transform: translateX(-50%);"]; // ↓
+    }
+
+    // Abajo derecha
+    if (rowDiff === -1 && columnDiff === -1) {
+      return ["&#8600;", "bottom: 0; right: 10px;"]; // ↘
+    }
+
+    // Default (no debería ocurrir, no puede apuntarse a sí mismo)
+    return ["", ""];
+  }
+
+  /**
+   * Crea o actualiza la flecha apuntando hacia la celda asociada
+   *
+   * @param { object } calculatedBox
+   */
+  function updateCalculatedBoxDOMArrowPointingTo(calculatedBox) {
+    if (!calculatedBox.pointingTo) {
+      return;
+    }
+
+    const { row: currentRow, column: currentColumn } = calculatedBox;
+    const { row: pointingToRow, column: pointingToColumn } =
+      calculatedBox.pointingTo;
+    const [arrowText, arrowStyles] = getArrowTextAndStyles(
+      currentRow,
+      currentColumn,
+      pointingToRow,
+      pointingToColumn,
+    );
+
+    const arrowSpan = document.createElement("span");
+    arrowSpan.innerHTML = arrowText;
+    arrowSpan.classList.add("arrow");
+    arrowSpan.style = arrowStyles;
+    calculatedBox.cell.appendChild(arrowSpan);
+  }
+
+  function calculateNearbyBoxes(box) {
+    for (let row = box.row - 1; row < box.row + 2; row++) {
+      for (let column = box.column - 1; column < box.column + 2; column++) {
+        // Evitar calcular la celda actual
+        if (row === box.row && column === box.column) {
+          continue;
+        }
+
+        const cell = document.querySelector(
+          `[data-row="${row}"][data-column="${column}"]`,
+        );
+        if (!cell) {
+          continue;
+        }
+
+        // Evitar calcular celdas ya recorridas y bloques
+        if (cell.classList.contains("checked-cell")) {
+          continue;
+        }
+        if (cell.classList.contains("block-cell")) {
+          continue;
+        }
+
+        // Si no se admite movimiento diagonal, evitar calcular las diagonales
+        if (!diagonalMovementIsAllowed) {
+          if (row !== box.row && column !== box.column) {
+            continue;
+          }
+        }
+
+        const cost =
+          row === box.row || column === box.column ? RECT_COST : DIAGONAL_COST;
+
+        const currentCost = box.currentCost + cost;
+        const remainigCost = calculateRemainingCost({ row, column });
+        const totalCost = remainigCost + currentCost;
+
+        const calculatedBox = calculatedBoxes.find((box) => {
+          return box.row === row && box.column === column;
+        });
+
+        if (calculatedBox) {
+          if (calculatedBox.totalCost > totalCost) {
+            calculatedBox.totalCost = totalCost;
+            calculatedBox.currentCost = currentCost;
+            calculatedBox.pointingTo = box;
+          }
+          updateCalculatedBoxDOMCostValues(calculatedBox);
+          updateCalculatedBoxDOMArrowPointingTo(calculatedBox);
+          continue;
+        }
+
+        cell.classList.add("calculated-cell");
+
+        const newCalculatedBox = {
+          cell,
+          row,
+          column,
+          totalCost,
+          currentCost,
+          remainigCost,
+          pointingTo: box,
+          addedAt: new Date().getTime(),
+        };
+
+        calculatedBoxes.push(newCalculatedBox);
+        updateCalculatedBoxDOMCostValues(newCalculatedBox);
+        updateCalculatedBoxDOMArrowPointingTo(newCalculatedBox);
+      }
+    }
+  }
+
+  /**
+   * Función algorítmica para comparar dos elementos box siguiendo tres criterios:
+   * - Si el coste restante es distinto, ordenamos por coste restante
+   * - Si el coste restante es igual y el coste total es distinto, lo ordenamos por coste total
+   * - Si el coste restante y el total son iguales, ordenamos por coste actual
+   * Siempre ordenaremos de manera ascendente
+   *
+   * @param { object } currentBox
+   * @param { object } nextBox
+   * @returns boolean
+   */
+  function sortAlgorithmFocusedOnRemainingLowerCost(currentBox, nextBox) {
+    if (currentBox.remainigCost === nextBox.remainigCost) {
+      if (currentBox.totalCost === nextBox.totalCost) {
+        return currentBox.currentCost - nextBox.currentCost;
+      }
+
+      return currentBox.totalCost - nextBox.totalCost;
+    }
+
+    return currentBox.remainigCost - nextBox.remainigCost;
+  }
+
+  /**
+   * Función algorítmica para comparar dos elementos box siguiendo tres criterios:
+   * - Si el coste total es distinto, ordenamos por coste total
+   * - Si el coste total es igual y el coste restante es distinto, lo ordenamos por coste restante
+   * - Si el coste total y el restante son iguales, ordenamos por coste actual
+   * Siempre ordenaremos de manera ascendente
+   *
+   * @param { object } currentBox
+   * @param { object } nextBox
+   * @returns boolean
+   */
+  function sortAlgorithmFocusedOnTotalLowerCost(currentBox, nextBox) {
+    if (currentBox.totalCost === nextBox.totalCost) {
+      if (currentBox.remainigCost === nextBox.remainigCost) {
+        return currentBox.currentCost - nextBox.currentCost;
+      }
+
+      return currentBox.remainigCost - nextBox.remainigCost;
+    }
+
+    return currentBox.totalCost - nextBox.totalCost;
+  }
+
+  function getNextBox() {
+    if (steps > 0) {
+      return getArrayBoxWithLowerCost(
+        calculatedBoxes,
+        sortAlgorithmFocusedOnTotalLowerCost,
+      );
+    }
+
+    return checkedBoxes.at(-1);
+  }
+
+  function removeBoxFromCalculatedBoxes(box) {
+    calculatedBoxes = calculatedBoxes.filter(
+      (calculatedBox) => calculatedBox.cell !== box.cell,
+    );
+  }
+
+  function markBoxAsChecked(box) {
+    box.cell.classList.add("checked-cell");
+    box.cell.classList.remove("calculated-cell");
+
+    if (box.cell !== startBox.cell) {
+      removeBoxFromCalculatedBoxes(box);
+      checkedBoxes.push(box);
+    }
+  }
+
+  function markShortestPath() {
+    let currentPointingTo = finishBox.pointingTo;
+
+    if (!currentPointingTo) {
+      currentPointingTo = getArrayBoxWithLowerCost(
+        checkedBoxes,
+        sortAlgorithmFocusedOnRemainingLowerCost,
+      );
+    }
+
+    while (currentPointingTo) {
+      currentPointingTo.cell.classList.add("shortest-path-cell");
+      currentPointingTo = currentPointingTo.pointingTo;
+    }
+  }
+
+  function finishGame(
+    alertTitle = null,
+    alertMessage = null,
+    isWarningAlert = true,
+  ) {
+    if (alertTitle && alertMessage) {
+      window.CustomNotificationManager.addNotification({
+        type: isWarningAlert ? "warning" : "success",
+        title: alertTitle,
+        message: alertMessage,
+      });
+    }
+
+    gameIsOver = true;
+    disableNextButton();
+    markShortestPath();
+    showResults({
+      totalCost: finishBox.pointingTo?.totalCost ?? null,
+      calculatedBoxesQt: calculatedBoxes.length + checkedBoxes.length,
+      checkedBoxesQt: checkedBoxes.length,
+    });
+
+    algorithmGridContainer.classList.add("game-finished");
+  }
+
+  function next() {
+    if (gameIsOver) {
+      return;
+    }
+
+    const previousMovementBox = nextBox;
+    nextBox = getNextBox();
+    if (nextBox === null) {
+      finishGame("Fin", "¡Camino bloqueado!");
+    }
+
+    markBoxAsChecked(nextBox);
+
+    if (nextBox.cell === finishBox.cell) {
+      gameIsOver = true;
+      finishBox.pointingTo = previousMovementBox ?? startBox;
+    }
+
+    if (gameIsOver) {
+      // finishGame("Fin", "¡Ruta óptima encontrada!", false)
+      finishGame();
+      return;
+    }
+
+    calculateNearbyBoxes(nextBox);
+    if (calculatedBoxes.length === 0) {
+      finishGame("Fin", "¡Camino bloqueado!");
+    }
+    steps++;
+  }
+
+  function reset() {
+    gameIsOver = false;
+    steps = 0;
+    clearAllCalculatedBoxes();
+    clearAllCheckedBoxes(true);
+    clearAllShortestPathCells();
+    enableNextButton();
+
+    algorithmGridContainer.classList.remove("game-finished");
+  }
+
+  const algorithmGridContainer = document.querySelector(
+    "#algorithm-grid-container",
+  );
+  const startBtn = document.querySelector("#start");
+  const clearBtn = document.querySelector("#clear");
+  const nextBtn = document.querySelector("#next");
+  const resetBtn = document.querySelector("#reset");
+  const exitBtn = document.querySelector("#exit");
+  const showArrowsCb = document.querySelector("#cb-show-arrows");
+  const allowDiagonalMovementCb = document.querySelector(
+    "#cb-allow-diagonal-movement",
+  );
+
+  startBtn.addEventListener("click", start);
+  clearBtn.addEventListener("click", clear);
+  nextBtn.addEventListener("click", next);
+  resetBtn.addEventListener("click", reset);
+  exitBtn.addEventListener("click", exit);
+  showArrowsCb.addEventListener("input", ({ target }) => {
+    if (target.checked) {
+      algorithmGridContainer.classList.add("show-arrows");
+    } else {
+      algorithmGridContainer.classList.remove("show-arrows");
+    }
+  });
+  allowDiagonalMovementCb.addEventListener("input", ({ target }) => {
+    diagonalMovementIsAllowed = target.checked;
+  });
+
+  clear();
+
+  // setInterval(() => {
+  //     showResults({
+  //         calculatedBoxesQt: Math.round(Math.random() * 10) + 10,
+  //         checkedBoxesQt: Math.round(Math.random() * 10) + 10,
+  //         totalCost: Math.round(Math.random() * 100) + 100
+  //     })
+  // }, 2000);
+</script>
+
+<style>
+  #algorithm-container .controls {
+    & > div {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 1rem;
+      gap: 1rem;
+      
+      & button {
+        margin-bottom: 0;
+      }
+      
+      & .cb-container {
+        display: flex;
+        align-items: center;
+        
+        & * {
+          cursor: pointer;
+        }
+        & label {
+          padding-left: 0.5rem;
+          user-select: none;
+        }
+      }
+    }
+  }
+
+  @keyframes grid-join {
+    from {
+      opacity: 0;
+    }
+  }
+
+  @keyframes grid-border-animation {
+    0% {
+      width: 0;
+      height: 0;
+    }
+    
+    25% {
+      width: 100%;
+      height: 0;
+    }
+    
+    100% {
+      width: 100%;
+      height: 100%;
+    }
+  }
+
+  @keyframes grid-border-bottom-animation {
+    0% {
+      width: 0;
+    }
+    
+    100% {
+      width: 100%;
+    }
+  }
+
+  @keyframes grid-cell-join {
+    from {
+      opacity: 0;
+      transform: translateY(-100%);
+    }
+    
+    to {
+      opacity: 1;
+    }
+  }
+
+  @keyframes algorithm-result-card {
+    from {
+      background-color: var(--animation-initial-bg-color);
+      opacity: 0;
+    }
+    
+    to {
+      opacity: 1;
+    }
+  }
+</style>
+
+<style is:global>
+  /* ESTILOS PARA CONTENIDO DINÁMICO */
+  #algorithm-grid-container {
+    width: fit-content;
+    max-width: 100%;
+    margin: 0 auto;
+    min-height: 100px;
+    
+    &.preparing {
+      & .board-cell:hover {
+        filter: opacity(0.5) brightness(0.5);
+      }
+    }
+    
+    &.show-arrows {
+      & .current-cost,
+      & .remaining-cost,
+      & .total-cost {
+        display: none;
+      }
+      & .arrow {
+        display: inline-block;
+      }
+    }
+    &:not(.show-arrows) {
+      & .arrow {
+        display: none;
+      }
+    }
+    
+    &.game-finished {
+      & .board-cell:not(.shortest-path-cell):not(.finish-cell) {
+        & * {
+          opacity: 0.5;
+        }
+        
+        & .arrow {
+          opacity: 0.3;
+        }
+      }
+    }
+    
+    .board-grid {
+      --board-grid-max-width: 800px;
+      width: fit-content;
+      max-width: var(--board-grid-max-width);
+      
+      position: relative;
+      display: grid;
+      justify-items: center;
+      align-content: center;
+      justify-content: center;
+      animation: grid-join 1500ms ease-in-out;
+      
+      font-family: Arial, Helvetica, sans-serif;
+      
+      &::after {
+        pointer-events: none;
+        border: 2px solid black;
+        border-bottom: none;
+        content: "";
+        position: absolute;
+        
+        animation: grid-border-animation 1800ms cubic-bezier(0.075, 0.82, 0.165, 1) forwards;
+      }
+      
+      &::before {
+        pointer-events: none;
+        border-bottom: 2px solid black;
+        content: "";
+        position: absolute;
+        
+        height: calc(100% + 1px);
+        animation: grid-border-bottom-animation 1000ms ease-in-out forwards 800ms;
+      }
+      
+      & .board-cell {
+        opacity: 0;
+        
+        min-width: 20px;
+        width: calc(var(--board-grid-max-width) / var(--columns));
+        max-width: min(100px, calc(70vw / var(--columns)));
+        
+        min-height: 20px;
+        height: calc(var(--board-grid-max-width) / var(--columns));
+        max-height: min(100px, calc(70vw / var(--columns)));
+        
+        border: 1px solid black;
+        background-color: #fff;
+        position: relative;
+        
+        animation-name: grid-cell-join;
+        animation-duration: 500ms;
+        animation-timing-function: cubic-bezier(0.075, 0.82, 0.165, 1);
+        animation-fill-mode: forwards;
+        animation-delay: calc(var(--counter) * 40ms);
+        
+        &.calculated-cell {
+          background-color: rgb(255, 217, 0);
+        }
+        &.checked-cell {
+          background-color: rgb(85, 114, 141);
+        }
+        &.shortest-path-cell {
+          background-color: rgb(133, 241, 133);
+        }
+        &.block-cell {
+          background-color: rgb(80, 80, 80);
+        }
+        &.start-cell {
+          background-color: rgb(26, 151, 26);
+        }
+        &.finish-cell {
+          background-color: rgb(255, 53, 53);
+        }
+        
+        & * {
+          pointer-events: none;
+        }
+        
+        & .current-cost {
+          position: absolute;
+          left: 10%;
+          top: 10%;
+        }
+        & .remaining-cost {
+          position: absolute;
+          right: 10%;
+          top: 10%;
+        }
+        & .total-cost {
+          position: absolute;
+          bottom: 10%;
+          left: 50%;
+          transform: translateX(-50%);
+          font-weight: 700;
+        }
+        & .arrow {
+          position: absolute;
+          height: fit-content;
+          font-size: 2.5rem;
+        }
+
+        & .current-cost,
+        & .remaining-cost {
+          font-size: clamp(0.5rem, 2.2vw, 1rem);
+        }
+        & .total-cost {
+          font-size: clamp(0.7rem, 2.4vw, 1.5rem);
+        }
+      }
+    }
+  }
+
+  .custom-notification-container {
+    pointer-events: none;
+    position: fixed;
+    top: 0;
+    right: 0;
+    z-index: 1000;
+    
+    width: 340px;
+    padding: 1rem;
+    
+    overflow: hidden;
+    
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    
+    --progress-bar-height: 5px;
+    --custom-notification-duration: 5000ms;
+  }
+
+  .custom-notification {
+    border-radius: 4px;
+    background-color: white;
+    box-shadow: 0 0 8px black;
+    color: #2f2f2f;
+    position: relative;
+    padding-bottom: var(--progress-bar-height);
+    opacity: 1;
+    overflow: hidden;
+    
+    animation: custom-notification-dismiss var(--custom-notification-duration) cubic-bezier(0, 1.16, 0.9, 1);
+  }
+
+  .alert-content {
+    padding: 1rem;
+  }
+
+  .alert-content h3 {
+    font-weight: 700;
+    padding-bottom: 1rem;
+  }
+
+  .custom-notification.info {
+    --progress-bar-color: darkblue;
+  }
+  .custom-notification.success {
+    --progress-bar-color: darkgreen;
+  }
+  .custom-notification.warning {
+    --progress-bar-color: darkorange;
+  }
+  .custom-notification.error {
+    --progress-bar-color: darkred;
+  }
+
+  .custom-notification::after {
+    content: " ";
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    height: var(--progress-bar-height);
+    background-color: var(--progress-bar-color);
+    
+    animation-name: custom-notification-progress-bar;
+    animation-fill-mode: forwards;
+    animation-duration: var(--custom-notification-duration);
+    animation-timing-function: cubic-bezier(0.39, 0.575, 0.565, 1);
+  }
+
+  #algorithm-results {
+    margin-top: 2rem;
+    padding: 1rem 0;
+    
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    
+    overflow: hidden;
+    
+    transform: scaleY(0);
+    transform-origin: top;
+    
+    &.show {
+      transition: transform 500ms;
+      transform: scaleY(1);
+    }
+    
+    & .ar-card {
+      flex: 1 1 150px;
+
+      animation-name: algorithm-result-card;
+      animation-duration: 1200ms;
+      animation-timing-function: cubic-bezier(0.075, 0.82, 0.165, 1);
+      animation-fill-mode: forwards;
+      --animation-initial-bg-color: rgb(124, 124, 160);
+      --animation-final-bg-color: #f5f5f5;
+
+      background-color: var(--animation-final-bg-color);
+      background: linear-gradient(
+        180deg,
+        white 0%,
+        var(--animation-final-bg-color) 100%
+      );
+
+      /* &.total-cost {
+        --animation-initial-bg-color: rgb(85, 187, 153);
+        --animation-final-bg-color: aquamarine;
+      } */
+      
+      &:nth-child(2) {
+        animation-delay: 100ms;
+      }
+      &:nth-child(3) {
+        animation-delay: 200ms;
+      }
+      &:nth-child(4) {
+        animation-delay: 300ms;
+      }
+    }
+  }
+
+  @keyframes custom-notification-progress-bar {
+    0% {
+      width: 100%;
+    }
+    
+    90% {
+      width: 0%;
+    }
+    
+    100% {
+      width: 0%;
+    }
+  }
+
+  @keyframes custom-notification-dismiss {
+    0% {
+      opacity: 0;
+      transform: translateX(100%);
+    }
+    
+    15% {
+      opacity: 1;
+      transform: translateX(0);
+    }
+    
+    90% {
+      opacity: 1;
+    }
+    
+    100% {
+      opacity: 0;
+    }
+  }
+</style>

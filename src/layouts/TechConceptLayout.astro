@@ -1,12 +1,12 @@
 ---
 import Layout from './Layout.astro';
-import Blog from '@components/Blog.astro';
+import TechConcept from '@components/TechConcept.astro';
 import { getCollection } from 'astro:content';
 
 const { frontmatter } = Astro.props;
 
 // Obtener todas las publicaciones y ordenarlas por fecha
-const posts = await getCollection('blog');
+const posts = await getCollection('tech-concepts');
 const sortedPosts = posts.sort((a, b) => 
   new Date(b.data.date).getTime() - new Date(a.data.date).getTime()
 );
@@ -41,12 +41,12 @@ const customTransition = {
 ---
 
 <Layout title={frontmatter.title}>
-  <Blog 
+  <TechConcept 
     frontmatter={frontmatter} 
     prevPost={prevPost} 
     nextPost={nextPost} 
     animation={customTransition} 
   >
     <slot />  
-  </Blog>
+  </TechConcept>
 </Layout>

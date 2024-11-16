@@ -1,5 +1,12 @@
 ---
+export interface Props {
+  id?: string;
+  className?: string;
+  [key: string]: any;
+}
+
+const { id, className } = Astro.props;
 ---
-<button class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition-colors">
+<button id={id} class:list={["bg-gray-800 text-white px-4 py-2 rounded-md hover:bg-gray-700 transition-colors", className]}>
     <slot />
 </button>

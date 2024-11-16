@@ -1,6 +1,6 @@
 ---
 import { getEntry } from 'astro:content';
-import BlogLayout from '../../layouts/BlogLayout.astro';
+import BlogLayout from '@layouts/BlogLayout.astro';
 
 const { slug } = Astro.params;
 const post = await getEntry('blog', slug);
