@@ -1,9 +1,11 @@
 ---
 import { getEntry } from 'astro:content';
-import TechConceptLayout from '@layouts/TechConceptLayout.astro';
+import PostLayout from '@layouts/PostLayout.astro';
+
+const contentFolder = 'tech-concepts';
 
 const { slug } = Astro.params;
-const post = await getEntry('tech-concepts', slug);
+const post = await getEntry(contentFolder, slug);
 
 if (!post) {
   throw new Error(`Post no encontrado: ${slug}`);
@@ -12,6 +14,6 @@ if (!post) {
 const { Content } = await post.render();
 ---
 
-<TechConceptLayout frontmatter={post.data}>
+<PostLayout frontmatter={post.data} contentFolder={contentFolder}>
   <Content />
-</TechConceptLayout>
+</PostLayout>

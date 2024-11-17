@@ -1,32 +1,8 @@
 ---
+import type { IPost } from '@interfaces/IPost';
+import type { IAnimNew, IAnimOld } from '@interfaces/IViewTransitionAnimation';
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
-
-interface IPost {
-  id: string;
-    slug: string;
-    body: string;
-    collection: string;
-    data: {
-      title?: string;
-      description?: string;
-      date?: string;
-      tags?: string[];
-    };
-}
-
-interface IAnimNew {
-  name: string;
-  duration: string;
-  easing: string;
-}
-
-interface IAnimOld {
-  name: string;
-  duration: string;
-  easing: string;
-  direction: string;
-}
 
 interface Props {
   prevPost: IPost,

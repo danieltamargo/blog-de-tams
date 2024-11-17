@@ -1,13 +1,19 @@
 ---
+import type { IPost } from '@interfaces/IPost';
 import Layout from './Layout.astro';
 import Post from '@components/Post.astro';
 import { getCollection } from 'astro:content';
 
-const { frontmatter } = Astro.props;
+interface Props {
+  frontmatter: { title?: string; description?: string; date?: string; tags?: string[]; }
+  contentFolder: "blog" | "tech-concepts";
+}
+
+const { frontmatter, contentFolder } = Astro.props;
 
 // Obtener todas las publicaciones y ordenarlas por fecha
-const posts = await getCollection('blog');
-const sortedPosts = posts.sort((a, b) => 
+const posts = await getCollection(contentFolder);
+const sortedPosts = posts.sort((a: IPost, b: IPost) => 
   new Date(b.data.date).getTime() - new Date(a.data.date).getTime()
 );
 
@@ -46,7 +52,7 @@ const customTransition = {
     prevPost={prevPost} 
     nextPost={nextPost} 
     animation={customTransition} 
-    contentFolder="blog"
+    contentFolder={contentFolder}
   >
     <slot />  
   </Post>
