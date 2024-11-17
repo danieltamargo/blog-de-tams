@@ -4,7 +4,6 @@ import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import { ViewTransitions, fade } from 'astro:transitions';
 import CardDani from '@components/CardDani.astro';
-import BackgroundBlob from '@components/BackgroundBlob.astro';
 
 interface Props {
 	title: string;
@@ -240,7 +239,6 @@ const { title, showInfo = true } = Astro.props;
 </script>
 
 <script>
-  console.log('yes')
   const blob = document.getElementById("blurred-blob-that-follows-the-mouse-hehe");
 
   window.addEventListener("mousemove", (evt) => {
