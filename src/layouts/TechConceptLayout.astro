@@ -1,6 +1,6 @@
 ---
 import Layout from './Layout.astro';
-import TechConcept from '@components/TechConcept.astro';
+import Post from '@components/Post.astro';
 import { getCollection } from 'astro:content';
 
 const { frontmatter } = Astro.props;
@@ -41,12 +41,13 @@ const customTransition = {
 ---
 
 <Layout title={frontmatter.title}>
-  <TechConcept 
+  <Post 
     frontmatter={frontmatter} 
     prevPost={prevPost} 
     nextPost={nextPost} 
     animation={customTransition} 
+    contentFolder="tech-concepts"
   >
     <slot />  
-  </TechConcept>
+  </Post>
 </Layout>

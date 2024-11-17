@@ -6,7 +6,6 @@ import ButtonPrimary from "@components/ButtonPrimary.astro";
 
 <div
   class="relative mb-12"
-  transition:persist
 >
   <div id="algorithm-container">
     <div class="controls">
@@ -28,9 +27,9 @@ import ButtonPrimary from "@components/ButtonPrimary.astro";
       </div>
 
       <div class="game-hud !hidden">
-        <button id="next">Siguiente</button>
-        <button id="reset">Reiniciar</button>
-        <button id="exit">Salir</button>
+        <ButtonPrimary id="next">Siguiente</ButtonPrimary>
+        <ButtonPrimary id="reset">Reiniciar</ButtonPrimary>
+        <ButtonPrimary id="exit">Salir y editar</ButtonPrimary>
 
         <div class="cb-container ml-auto">
           <input type="checkbox" name="cb-show-arrows" id="cb-show-arrows" />
@@ -1137,6 +1136,8 @@ import ButtonPrimary from "@components/ButtonPrimary.astro";
         var(--animation-final-bg-color) 100%
       );
 
+      transition: filter 500ms;
+
       /* &.total-cost {
         --animation-initial-bg-color: rgb(85, 187, 153);
         --animation-final-bg-color: aquamarine;
@@ -1150,6 +1151,10 @@ import ButtonPrimary from "@components/ButtonPrimary.astro";
       }
       &:nth-child(4) {
         animation-delay: 300ms;
+      }
+
+      &:hover {
+        filter: brightness(0.9);
       }
     }
   }

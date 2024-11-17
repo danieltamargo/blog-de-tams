@@ -4,6 +4,7 @@ import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import { ViewTransitions, fade } from 'astro:transitions';
 import CardDani from '@components/CardDani.astro';
+import BackgroundBlob from '@components/BackgroundBlob.astro';
 
 interface Props {
 	title: string;
@@ -25,10 +26,16 @@ const { title, showInfo = true } = Astro.props;
 	</head>
 	<body class="min-h-svh w-screen bg-gray-50 overflow-x-hidden">
 		<BackgroundPattern transition:animate={fade({ duration: '0' })} />
+		<div class="fixed top-0 left-0 w-full h-full overflow-hidden" transition:persist>
+      <div id="blurred-blob-that-follows-the-mouse-hehe">
+        <!-- Inspired by Hyperplexed video -->
+      </div>
+    </div>
+
 		<Header transition:animate={fade({ duration: '0' })} />
 		<!-- Personal card aside -->
 		<div class="flex flex-col items-center xl:items-start xl:flex-row xl:flex-wrap xl:justify-center gap-6 max-w-[100svw] w-7xl py-12 px-6 mx-auto">
-			{showInfo && <CardDani transition:animate={fade({ duration: '0' })} />}
+			{showInfo && <CardDani transition:animate={fade({ duration: '0' })} transition:persist />}
 	
 			<main class="max-w-full w-4xl">
 				<slot />
@@ -232,6 +239,28 @@ const { title, showInfo = true } = Astro.props;
   */
 </script>
 
+<script>
+  console.log('yes')
+  const blob = document.getElementById("blurred-blob-that-follows-the-mouse-hehe");
+
+  window.addEventListener("mousemove", (evt) => {
+    const { clientX, clientY } = evt
+
+    // https://developer.mozilla.org/es/docs/Web/API/Element/animate
+    // https://developer.mozilla.org/en-US/docs/Web/API/KeyframeEffect
+    blob.animate([
+      { 
+        left: `${clientX}px`,
+        top: `${clientY}px`,
+      },
+    ], {
+      duration: 1000,
+      easing: "ease-in-out",
+      fill: "forwards",
+    })
+  })
+</script>
+
 <style is:global>
 	body {
 		scrollbar-gutter: stable both-edges;
@@ -239,6 +268,10 @@ const { title, showInfo = true } = Astro.props;
 		grid-template-rows: auto 1fr auto;
 		grid-template-columns: 1fr;	
 	}
+
+  hr {
+    margin: 1rem 0 !important;
+  }
 
 	@keyframes slide-from-left {
 		from { transform: translateX(-100%); opacity: 0; }
@@ -250,3 +283,33 @@ const { title, showInfo = true } = Astro.props;
 		to { transform: translateX(0); opacity: 1; }
 	}
 </style>
+
+<style>
+  #blurred-blob-that-follows-the-mouse-hehe {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  
+    width: 100px;
+    height: 100px;
+  
+    border-radius: 50%;
+    filter: blur(20px);
+    pointer-events: none;
+  
+    background: radial-gradient(circle, #a8d4f9, #d4a8f9, #a8f9d4, #f9d4a8);
+    background-size: 200% 200%;
+    animation: smooth-gradient 2s infinite alternate;
+  }
+  
+  @keyframes smooth-gradient {
+    0% {
+      background-position: 0% 50%;
+    }
+  
+    100% {
+      background-position: 100% 50%;
+    }
+  }
+  </style>

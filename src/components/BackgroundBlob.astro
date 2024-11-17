@@ -1,0 +1,27 @@
+---
+---
+
+
+
+
+<script>
+  const blob = document.getElementById("blurred-blob-that-follows-the-mouse-hehe");
+
+  window.addEventListener("mousemove", (evt) => {
+    const { clientX, clientY } = evt
+
+    // https://developer.mozilla.org/es/docs/Web/API/Element/animate
+    // https://developer.mozilla.org/en-US/docs/Web/API/KeyframeEffect
+    blob.animate([
+      { 
+        left: `${clientX}px`,
+        top: `${clientY}px`,
+      },
+    ], {
+      duration: 1000,
+      easing: "ease-in-out",
+      fill: "forwards",
+    })
+  })
+</script>
+
