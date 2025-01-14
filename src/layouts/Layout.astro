@@ -4,6 +4,7 @@ import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import { ViewTransitions, fade } from 'astro:transitions';
 import CardDani from '@components/CardDani.astro';
+import Ratings from '@components/Ratings.astro';
 
 interface Props {
 	title: string;
@@ -32,8 +33,8 @@ const { title, showInfo = true } = Astro.props;
     </div>
 
 		<Header transition:animate={fade({ duration: '0' })} />
-		<!-- Personal card aside -->
 		<div class="flex flex-col items-center xl:items-start xl:flex-row xl:flex-wrap xl:justify-center gap-6 max-w-[100svw] w-7xl py-12 px-6 mx-auto">
+      <!-- Personal card aside -->
 			{showInfo && <CardDani transition:animate={fade({ duration: '0' })} transition:persist />}
 	
 			<main class="max-w-full w-4xl">
@@ -42,6 +43,9 @@ const { title, showInfo = true } = Astro.props;
 
       <div class="hidden border-4 border-blue-500"></div>
 		</div>
+
+    <Ratings transition:animate={fade({ duration: '0' })} />
+
 		<Footer transition:animate={fade({ duration: '0' })} />
 	</body>
 </html>
@@ -111,7 +115,7 @@ const { title, showInfo = true } = Astro.props;
         window.CustomNotificationManager.removeNotificatonById(this.id);
         document.getElementById(this.notificationId).remove();
       } catch (error) {
-        console.log(error);
+        console.error(error);
       }
     }
   }
@@ -242,16 +246,25 @@ const { title, showInfo = true } = Astro.props;
 
 <script>
   const blob = document.getElementById("blurred-blob-that-follows-the-mouse-hehe");
+  const initialBlobWidth = blob.offsetWidth
+  const initialBlobHeight = blob.offsetHeight
+  let blobCanMove = true
+
+  // Coordenadas del mouse
+  let mouseX = 0;
+  let mouseY = 0;
 
   window.addEventListener("mousemove", (evt) => {
-    const { clientX, clientY } = evt
+    if (!blobCanMove) return
+    mouseX = evt.clientX;
+    mouseY = evt.clientY;
 
     // https://developer.mozilla.org/es/docs/Web/API/Element/animate
     // https://developer.mozilla.org/en-US/docs/Web/API/KeyframeEffect
     blob.animate([
       { 
-        left: `${clientX}px`,
-        top: `${clientY}px`,
+        left: `${mouseX}px`,
+        top: `${mouseY}px`,
       },
     ], {
       duration: 1000,
@@ -260,19 +273,57 @@ const { title, showInfo = true } = Astro.props;
     })
   })
 
-  const blocks = document.querySelectorAll<HTMLDivElement>(".screen-block")
-  console.log(blocks)
-  blocks.forEach((block) => {
-    block.addEventListener("mouseenter", () => {
-      console.log("Mouse enter")
-      block.classList.add("border-4", "border-blue-500")
-    })
+  let blocks: NodeListOf<HTMLDivElement>|any = []
+  
+  const blobBlockMouseEnter = ({ target }) => {
+    const block = target as HTMLDivElement
+    blobCanMove = false
 
-    block.addEventListener("mouseleave", () => {
-      console.log("Mouse leave")
-      block.classList.remove("border-4", "border-blue-500")
+    const blockRect = block.getBoundingClientRect(); // Obtiene las coordenadas absolutas
+    const blockCenterX = blockRect.left + blockRect.width / 2;
+    const blockCenterY = blockRect.top + blockRect.height / 2;
+
+    blob.animate([
+      { 
+        width: block.offsetWidth + "px",
+        height: block.offsetHeight + "px",
+        left: `${blockCenterX}px`,
+        top: `${blockCenterY}px`,
+        borderRadius: "2rem",
+      },
+    ], {
+      duration: 250,
+      easing: "ease-in-out",
+      fill: "forwards",
+    })
+  }
+
+  const blobBlockMouseLeave = () => {
+    blobCanMove = true
+
+    blob.animate([
+      { 
+        width: `${initialBlobWidth}px`,
+        height: `${initialBlobHeight}px`,
+      },
+    ], {
+      duration: 250,
+      easing: "ease-in-out",
+      fill: "forwards",
+    })
+  }
+
+  document.addEventListener("astro:page-load", () => {
+    blocks = document.querySelectorAll<HTMLDivElement>(".blob-hoverable")
+    blocks.forEach((block: HTMLDivElement) => {
+      block.removeEventListener("mouseenter", blobBlockMouseEnter)
+      block.addEventListener("mouseenter", blobBlockMouseEnter)
+  
+      block.removeEventListener("mouseleave", blobBlockMouseLeave)
+      block.addEventListener("mouseleave", blobBlockMouseLeave)
     })
   })
+  
 </script>
 
 <style is:global>
