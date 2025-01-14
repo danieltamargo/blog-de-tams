@@ -39,6 +39,8 @@ const { title, showInfo = true } = Astro.props;
 			<main class="max-w-full w-4xl">
 				<slot />
 			</main>
+
+      <div class="hidden border-4 border-blue-500"></div>
 		</div>
 		<Footer transition:animate={fade({ duration: '0' })} />
 	</body>
@@ -257,6 +259,20 @@ const { title, showInfo = true } = Astro.props;
       fill: "forwards",
     })
   })
+
+  const blocks = document.querySelectorAll<HTMLDivElement>(".screen-block")
+  console.log(blocks)
+  blocks.forEach((block) => {
+    block.addEventListener("mouseenter", () => {
+      console.log("Mouse enter")
+      block.classList.add("border-4", "border-blue-500")
+    })
+
+    block.addEventListener("mouseleave", () => {
+      console.log("Mouse leave")
+      block.classList.remove("border-4", "border-blue-500")
+    })
+  })
 </script>
 
 <style is:global>
@@ -269,6 +285,10 @@ const { title, showInfo = true } = Astro.props;
 
   hr {
     margin: 1rem 0 !important;
+  }
+
+  .screen-block {
+    @apply backdrop-blur-sm rounded-xl bg-white/80 shadow-sm border border-gray-100 hover:shadow-md transition-shadow;
   }
 
 	@keyframes slide-from-left {

@@ -20,7 +20,7 @@ allPosts.sort((a, b) => new Date(b.data.date).getTime() - new Date(a.data.date).
 
   <div class="space-y-4">
     {allPosts.map((post) => (
-      <article class="bg-white/80 backdrop-blur-sm rounded-xl p-6 shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
+      <article class="p-6 screen-block">
         <h2 class="text-3xl font-bold mb-2">
           <a href={`/${post.collection}/${post.slug}`} class="hover:text-blue-600 transition-colors">
             {post.data.title}

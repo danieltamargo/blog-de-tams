@@ -6,7 +6,7 @@ const categories = [
       "El mundo cambio y no se detiene, sobre todo en el ámbito tecnológico. Veamos y analicemos puntos interesantes para seguir impulsando nuestro saber 🚀",
     gradient: "from-blue-600 to-blue-400",
     quote: {
-      text: "La única constante en la tecnología es <b>el cambio</b>.",
+      text: "La única constante en la tecnología es el cambio.",
       author: "Marc Benioff, CEO de Salesforce",
     },
     icon: "📰",
@@ -17,8 +17,8 @@ const categories = [
       'Profundicemos 🤿 en algunos conceptos técnicos, desde algoritmos y estructuras de datos hasta ciberseguridad y más.',
     gradient: "from-purple-600 to-purple-400",
     quote: {
-      text: "Cuanto más aprendo, más veo lo que me falta por aprender, y eso solo me <b>motiva</b> a seguir aprendiendo.",
-      author: "Daniel Tamargo",
+      text: "Vive como si fueras a morir mañana. Aprende como si fueras a vivir para siempre.",
+      author: "Mahatma Gandhi",
     },
     icon: "🔬",
   },
@@ -38,13 +38,17 @@ const categories = [
     description:
       "Si quieres saber un poco más sobre mí, conocer mis intereses y motivaciones, haz clic en ese botoncito de abajo.",
     gradient: "from-pink-600 to-pink-400",
+    quote: {
+      text: "Cuanto más aprendo, más veo lo que me falta por aprender, y eso solo me <b>motiva</b> a seguir aprendiendo.",
+      author: "Daniel Tamargo",
+    },
     icon: "👨‍💻",
   },
 ];
 ---
 <div
   id="category-carousel"
-  class="relative overflow-hidden py-8 mb-12 bg-white/40 backdrop-blur-sm rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition-shadow"
+  class="relative overflow-hidden py-8 mb-12 screen-block"
   transition:persist
 >
   <!-- Barra de progreso para ver siguiente categoría -->
@@ -68,7 +72,7 @@ const categories = [
           >
             <div class="text-4xl absolute top-0 left-0 -translate-y-2/3">{category.icon}</div>
             <h3 class="text-2xl font-bold mb-2">{category.name}</h3>
-            <p class="text-white">{category.description}</p>
+            <p class="text-white" set:html={category.description}></p>
             {category.quote && (
               <blockquote class="text-sm text-white/90 mt-4">
                 <p class="flex flex-col">
@@ -123,7 +127,8 @@ const categories = [
   const track = document.querySelector(".carousel-track");
   const dots = document.querySelectorAll(".carousel-dot");
   const progressBar = document.getElementById("carousel-next-category-progress-bar");
-
+  
+  let isPaused = false;
   const slideCount = dots.length;
   let currentIndex = 0;
   const carouselIntervalTime = 4000;
@@ -170,6 +175,10 @@ const categories = [
     progressBar.style.animationDuration = `${carouselIntervalTime}ms`;
     progressBar.style.animationTimingFunction = "ease";
     progressBar.style.animationFillMode = "forwards";
+
+    if (isPaused) {
+      progressBar.style.animationPlayState = "paused";
+    }
   }
 
   function carouselIntervalFunc() {
@@ -188,6 +197,7 @@ const categories = [
     });
 
     carousel.addEventListener("mouseenter", () => {
+      isPaused = true;
       pausedTime += carouselIntervalStartedAt
         ? Date.now() - carouselIntervalStartedAt
         : 0;
@@ -199,6 +209,7 @@ const categories = [
     });
 
     carousel.addEventListener("mouseleave", () => {
+      isPaused = false;
       let remainigTime = resumeCarouselTime - pausedTime;
       carouselIntervalStartedAt = Date.now();
       remainigTime = remainigTime < 0 ? 0 : remainigTime;

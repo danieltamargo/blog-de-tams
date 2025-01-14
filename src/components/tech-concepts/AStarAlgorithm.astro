@@ -74,6 +74,8 @@ import ButtonPrimary from "@components/ButtonPrimary.astro";
   function showResults({ totalCost, checkedBoxesQt, calculatedBoxesQt }) {
     const { rows, columns } = getGridSize();
     const totalCells = rows * columns - document.querySelectorAll(".block-cell").length - 2; // -2 por casilla inicio y fin
+    const blockedCells = document.querySelectorAll(".block-cell").length;
+    const totalEnabledCells = totalCells - blockedCells;
 
     const algorithmResultsDiv = document.getElementById("algorithm-results");
     let content = "";
@@ -90,7 +92,7 @@ import ButtonPrimary from "@components/ButtonPrimary.astro";
       content += `
               <div class="ar-card shadow-lg flex flex-col justify-center items-center p-4 rounded border border-gray-100">
                   <span class="text-sm text-gray-700">casillas recorridas</span>
-                  <h3 class="text-5xl text-gray-800 m-0">${checkedBoxesQt} <span class="text-2xl text-gray-500">/ ${totalCells}</span></h3>
+                  <h3 class="text-5xl text-gray-800 m-0">${checkedBoxesQt - 2} <span class="text-2xl text-gray-500">/ ${totalEnabledCells}</span></h3>
               </div>
           `;
     }
@@ -99,7 +101,7 @@ import ButtonPrimary from "@components/ButtonPrimary.astro";
       content += `
               <div class="ar-card shadow-lg flex flex-col justify-center items-center p-4 rounded border border-gray-100">
                   <span class="text-sm text-gray-700">casillas calculadas</span>
-                  <h3 class="text-5xl text-gray-800 m-0">${calculatedBoxesQt} <span class="text-2xl text-gray-500">/ ${totalCells}</span></h3>
+                  <h3 class="text-5xl text-gray-800 m-0">${calculatedBoxesQt - 2} <span class="text-2xl text-gray-500">/ ${totalEnabledCells}</span></h3>
               </div>
           `;
     }
