@@ -274,21 +274,23 @@ const { title, showInfo = true } = Astro.props;
   })
 
   let blocks: NodeListOf<HTMLDivElement>|any = []
+  let hoveringX = 0
+  let hoveringY = 0
   
   const blobBlockMouseEnter = ({ target }) => {
     const block = target as HTMLDivElement
     blobCanMove = false
 
     const blockRect = block.getBoundingClientRect(); // Obtiene las coordenadas absolutas
-    const blockCenterX = blockRect.left + blockRect.width / 2;
-    const blockCenterY = blockRect.top + blockRect.height / 2;
+    hoveringX = blockRect.left + blockRect.width / 2;
+    hoveringY = blockRect.top + blockRect.height / 2;
 
     blob.animate([
       { 
         width: block.offsetWidth + "px",
         height: block.offsetHeight + "px",
-        left: `${blockCenterX}px`,
-        top: `${blockCenterY}px`,
+        left: `${hoveringX}px`,
+        top: `${hoveringY}px`,
         borderRadius: "2rem",
       },
     ], {
@@ -322,6 +324,38 @@ const { title, showInfo = true } = Astro.props;
       block.removeEventListener("mouseleave", blobBlockMouseLeave)
       block.addEventListener("mouseleave", blobBlockMouseLeave)
     })
+  })
+
+  let currentScrollY = 0
+  let currentScrollX = 0
+
+  const updateHoveringPosition = (newScrollY: number, newScrollX: number) => {
+    const newTop = hoveringY + currentScrollY - newScrollY
+    const newLeft = hoveringX + currentScrollX - newScrollX
+
+    blob.animate([
+      {
+        top: `${newTop}px`,
+        left: `${newLeft}px`,
+      }
+    ], {
+      fill: "forwards"
+    })
+
+    hoveringY = newTop
+    hoveringX = newLeft
+  }
+
+  window.addEventListener("scroll", () => {
+    const newScrollY = window.scrollY
+    const newScrollX = window.scrollX
+
+    if (!blobCanMove) {
+      updateHoveringPosition(newScrollY, newScrollX)
+    }
+
+    currentScrollY = newScrollY
+    currentScrollX = newScrollX
   })
   
 </script>
