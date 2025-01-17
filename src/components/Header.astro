@@ -1,7 +1,5 @@
----
----
-<nav id="header-nav" class="bg-white/80 backdrop-blur-sm border-b border-gray-100 sticky top-0 z-50" transition:persist>
-  <div class="max-w-7xl mx-auto px-8">
+<nav id="header-nav" class="backdrop-blur-sm sticky top-0 z-50">
+  <div id="header-nav-content" class="bg-white/90 border-b border-gray-100">
     <div class="flex items-center justify-between h-16">
       <a href="/" class="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-gray-900 to-gray-600">
         El blog de Tams
@@ -14,28 +12,51 @@
     </div>
   </div>
 </nav>
-<!-- <script>
-document.addEventListener("scroll", (evt) => {
-  const headerNav = document.getElementById("header-nav");
-  if (window.scrollY > 0) {
-    headerNav.classList.add("scrolled");
-  } else {
-    headerNav.classList.remove("scrolled");
-  }
-})
+<script>
+  let removeTransitionsEffectTimeout: number|undefined;
+  const headerContent = document.getElementById("header-nav-content");
+  
+  document.addEventListener("scroll", () => {
+    clearTimeout(removeTransitionsEffectTimeout);
+
+    headerContent.classList.add("transitions-enabled");
+
+    if (window.scrollY > 0) {
+      headerContent.classList.add("scrolled");
+    } else {
+      headerContent.classList.remove("scrolled");
+    }
+
+    // Habilitar animaciones SÓLO cuando se hace la acción
+    // (así evito que al hacer resize de la ventana se vea una animación extraña por la anchura)
+    removeTransitionsEffectTimeout = setTimeout(() => {
+      headerContent.classList.remove("transitions-enabled");
+    }, 250);
+  });
 </script>
 <style>
-#header-nav {
+.transitions-enabled {
   transition: all 0.2s ease-in-out;
 }
-#header-nav.scrolled {
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  top: 5px;
-  width: fit-content;
-  max-width: 80rem;
-  width: 100vw;
-  margin: 0 auto;
-  border-radius: 1rem;
+
+#header-nav {
+  width: 100%;
+  display: flex;
+  justify-content: center;
 }
 
-</style> -->
+#header-nav-content {
+  width: 100%;
+  max-width: 100vw;
+  padding-left: 2rem;
+  padding-right: 2rem;
+}
+
+#header-nav-content.scrolled {
+  max-width: 80rem;
+  width: 90vw;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  border-radius: 1rem;
+  transform: translateY(5px);
+}
+</style>

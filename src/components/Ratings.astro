@@ -3,7 +3,8 @@ const ratings = [
   {
     user: 'John Doe',
     score: 4,
-    review: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed ut purus eget sapien.'
+    review: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed ut purus eget sapien.',
+    class: ''
   },
   {
     user: 'Jane Doe',
@@ -24,7 +25,7 @@ transition:persist>
   <div id="ratings-container">
     <div id="ratings-list">
       {ratings.map((rating) => (
-        <div class="max-w-72 rating">
+        <div class:list={['max-w-72 rating', rating.class]}>
           <p class="text-gray-500">
             <span class="font-bold">{rating.user}</span>
           </p>
@@ -104,7 +105,7 @@ transition:persist>
   gap: 4rem;
 
   width: max-content;
-  animation: rating-scroll 40s linear infinite;
+  animation: rating-scroll 10s linear infinite;
 }
 
 .rating {

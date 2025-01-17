@@ -339,6 +339,7 @@ const { title, showInfo = true } = Astro.props;
         left: `${newLeft}px`,
       }
     ], {
+      duration: 10,
       fill: "forwards"
     })
 
@@ -373,7 +374,7 @@ const { title, showInfo = true } = Astro.props;
   }
 
   .screen-block {
-    @apply backdrop-blur-sm rounded-xl bg-white/80 shadow-sm border border-gray-100 hover:shadow-md transition-shadow;
+    @apply backdrop-blur-sm rounded-xl bg-white/90 shadow-sm border border-gray-100 hover:shadow-md transition-shadow;
   }
 
 	@keyframes slide-from-left {

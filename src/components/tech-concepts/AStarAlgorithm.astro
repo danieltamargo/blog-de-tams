@@ -295,7 +295,6 @@ import ButtonPrimary from "@components/ButtonPrimary.astro";
    * Comenzar el modo ejecución algoritmo
    */
   function start() {
-    console.log("start");
     if (!startBox || !finishBox) {
       window.CustomNotificationManager.addWarningNotification({
         title: "¡No tan deprisa!",
@@ -326,7 +325,6 @@ import ButtonPrimary from "@components/ButtonPrimary.astro";
   }
 
   function selectAsStartBox(target) {
-    console.log("selectAsStartBox", target);
     target.classList.add("start-cell");
     removeAsBlockIfCellIsBlock(target);
 
@@ -338,13 +336,11 @@ import ButtonPrimary from "@components/ButtonPrimary.astro";
   }
 
   function unselectAsStartBox(target) {
-    console.log("unselectAsStartBox", target);
     target.classList.remove("start-cell");
     startBox = null;
   }
 
   function selectAsFinishBox(target) {
-    console.log("selectAsFinishBox", target);
     target.classList.add("finish-cell");
     removeAsBlockIfCellIsBlock(target);
 
@@ -356,7 +352,6 @@ import ButtonPrimary from "@components/ButtonPrimary.astro";
   }
 
   function unselectAsFinishBox(target) {
-    console.log("unselectAsFinishBox", target);
     target.classList.remove("finish-cell");
     finishBox = null;
   }
@@ -383,7 +378,6 @@ import ButtonPrimary from "@components/ButtonPrimary.astro";
     }
 
     // Marcar / desmarcar como celda bloque
-    console.log("toggleBlockCell", target);
     target.classList.toggle("block-cell");
   }
 
