@@ -73,9 +73,7 @@ import ButtonPrimary from "@components/ButtonPrimary.astro";
 
   function showResults({ totalCost, checkedBoxesQt, calculatedBoxesQt }) {
     const { rows, columns } = getGridSize();
-    const totalCells = rows * columns - document.querySelectorAll(".block-cell").length - 2; // -2 por casilla inicio y fin
-    const blockedCells = document.querySelectorAll(".block-cell").length;
-    const totalEnabledCells = totalCells - blockedCells;
+    const totalEnabledCells = rows * columns - document.querySelectorAll(".block-cell").length - 2; // -2 por casilla inicio y fin
 
     const algorithmResultsDiv = document.getElementById("algorithm-results");
     let content = "";

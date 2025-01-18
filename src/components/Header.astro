@@ -1,6 +1,6 @@
-<nav id="header-nav" class="backdrop-blur-sm sticky top-0 z-50">
-  <div id="header-nav-content" class="bg-white/90 border-b border-gray-100">
-    <div class="flex items-center justify-between h-16">
+<nav id="header-nav">
+  <div id="header-nav-content">
+    <div class="flex items-center justify-between h-16 max-w-7xl mx-auto">
       <a href="/" class="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-gray-900 to-gray-600">
         El blog de Tams
       </a>
@@ -14,25 +14,47 @@
 </nav>
 <script>
   let removeTransitionsEffectTimeout: number|undefined;
-  const headerContent = document.getElementById("header-nav-content");
-  
-  document.addEventListener("scroll", () => {
+  let headerContent;
+  let isScrolled = false;
+
+  const toggleNavScrolled = () => {
     clearTimeout(removeTransitionsEffectTimeout);
-
     headerContent.classList.add("transitions-enabled");
-
-    if (window.scrollY > 0) {
-      headerContent.classList.add("scrolled");
-    } else {
-      headerContent.classList.remove("scrolled");
-    }
+    headerContent.classList.toggle("scrolled");
 
     // Habilitar animaciones SÓLO cuando se hace la acción
     // (así evito que al hacer resize de la ventana se vea una animación extraña por la anchura)
     removeTransitionsEffectTimeout = setTimeout(() => {
       headerContent.classList.remove("transitions-enabled");
     }, 250);
+  }
+
+  document.addEventListener("scroll", () => {
+    if (!headerContent) {
+      return;
+    }
+
+    if (window.scrollY > 0 && !isScrolled) {
+      isScrolled = true;
+    } else if (window.scrollY === 0 && isScrolled) {
+      isScrolled = false;
+    } else {
+      return;
+    }
+
+    toggleNavScrolled();
   });
+
+  document.addEventListener('astro:page-load', () => {
+    // Al cargar la página, por las view transitions, el elemento se vuelve a cargar, así que lo vuelvo a buscar
+    headerContent = document.getElementById("header-nav-content");
+
+    if (window.scrollY > 0) {
+      isScrolled = true;
+      toggleNavScrolled();
+    }
+  })
+
 </script>
 <style>
 .transitions-enabled {
@@ -43,9 +65,13 @@
   width: 100%;
   display: flex;
   justify-content: center;
+  position: sticky;
+  top: 0;
+  z-index: 50;
 }
 
 #header-nav-content {
+  @apply bg-white/90 border-b border-gray-100 backdrop-blur-xl;
   width: 100%;
   max-width: 100vw;
   padding-left: 2rem;
@@ -53,6 +79,7 @@
 }
 
 #header-nav-content.scrolled {
+  @apply bg-white/60;
   max-width: 80rem;
   width: 90vw;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);

@@ -27,12 +27,12 @@ const { title, showInfo = true } = Astro.props;
 	<body class="min-h-svh w-screen bg-gray-50 overflow-x-hidden">
 		<BackgroundPattern transition:animate={fade({ duration: '0' })} />
 		<div class="fixed top-0 left-0 w-full h-full overflow-hidden" transition:persist>
-      <div id="blurred-blob-that-follows-the-mouse-hehe">
+      <div id="blurred-blob-that-follows-the-mouse-hehe" class="opacity-0">
         <!-- Inspired by Hyperplexed video -->
       </div>
     </div>
 
-		<Header transition:animate={fade({ duration: '0' })} />
+		<Header client:load />
 		<div class="flex flex-col items-center xl:items-start xl:flex-row xl:flex-wrap xl:justify-center gap-6 max-w-[100svw] w-7xl py-12 px-6 mx-auto">
       <!-- Personal card aside -->
 			{showInfo && <CardDani transition:animate={fade({ duration: '0' })} transition:persist />}
@@ -254,6 +254,13 @@ const { title, showInfo = true } = Astro.props;
   let mouseX = 0;
   let mouseY = 0;
 
+  const makeBlobAppear = () => {
+    blob.classList.remove("opacity-0")
+    window.removeEventListener("mousemove", makeBlobAppear)
+  }
+
+  window.addEventListener("mousemove", makeBlobAppear)
+
   window.addEventListener("mousemove", (evt) => {
     if (!blobCanMove) return
     mouseX = evt.clientX;
@@ -300,16 +307,21 @@ const { title, showInfo = true } = Astro.props;
     })
   }
 
-  const blobBlockMouseLeave = () => {
+  const blobBlockMouseLeave = (event: MouseEvent) => {
     blobCanMove = true
+
+    mouseX = event.clientX;
+    mouseY = event.clientY;
 
     blob.animate([
       { 
+        left: `${mouseX}px`,
+        top: `${mouseY}px`,
         width: `${initialBlobWidth}px`,
         height: `${initialBlobHeight}px`,
       },
     ], {
-      duration: 250,
+      duration: 100,
       easing: "ease-in-out",
       fill: "forwards",
     })
@@ -390,6 +402,8 @@ const { title, showInfo = true } = Astro.props;
 
 <style>
   #blurred-blob-that-follows-the-mouse-hehe {
+    transition: opacity 1.5s;
+
     position: absolute;
     top: 50%;
     left: 50%;
