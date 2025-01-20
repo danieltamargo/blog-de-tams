@@ -22,17 +22,16 @@ import Layout from '@layouts/Layout.astro';
     </div>
   </div>
 </Layout>
-<script>
-  document.addEventListener("astro:page-load", () => {
-    const form = document.getElementById("coupon-redeem-form") as HTMLFormElement;
-    form.addEventListener("submit", (e) => {
-      e.preventDefault();
-      const coupon = form.querySelector<HTMLInputElement>("#coupon").value;
-      window.CustomNotificationManager.addNotification({
-        type: "success",
-        title: "Cupón canjeado",
-        message: `El cupón ${coupon} ha sido canjeado correctamente.`,
-      });
+<script type="module">
+  console.log('Hello from the redeem page!');
+  const form = document.getElementById("coupon-redeem-form");
+  form.addEventListener("submit", (e) => {
+    e.preventDefault();
+    const coupon = form.querySelector<HTMLInputElement>("#coupon").value;
+    window.CustomNotificationManager.addNotification({
+      type: "success",
+      title: "Cupón canjeado",
+      message: `El cupón ${coupon} ha sido canjeado correctamente.`,
     });
   });
 </script>

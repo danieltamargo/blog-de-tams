@@ -1,30 +1,44 @@
-<nav id="header-nav">
+---
+const links = [
+  { href: '/', text: 'Inicio' },
+  { href: '/career', text: 'Mi trayectoria' },
+  { href: '/coupon/redeem', text: 'Canjear cupón' },
+]
+---
+<nav id="header-nav"
+transition:persist="header"
+>
   <div id="header-nav-content">
     <div class="flex items-center justify-between h-16 max-w-7xl mx-auto">
       <a href="/" class="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-gray-900 to-gray-600">
         El blog de Tams
       </a>
       <div class="flex space-x-4">
-        <a href="/" class="text-gray-700 hover:text-gray-900 transition-colors">
-          Inicio
-        </a>
-        <a href="/coupon/redeem" class="text-gray-700 hover:text-gray-900 transition-colors">
-          Canjear cupón
-        </a>
+        {links.map((link) => (
+          <div class="flex items-center space-x-1 hover:bg-gray-100 p-2 rounded-md">
+            <a href={link.href}>{link.text}</a>
+          </div>
+        ))}
       </div>
     </div>
   </div>
 </nav>
 <script>
   let removeTransitionsEffectTimeout: number|undefined;
-  let headerContent;
+  let headerContent: HTMLDivElement|null;
   let isScrolled = false;
 
   const toggleNavScrolled = (executeAnimation = true) => {
     clearTimeout(removeTransitionsEffectTimeout);
     if (executeAnimation) headerContent.classList.add("transitions-enabled");
 
-    headerContent.classList.toggle("scrolled");
+    if (window.scrollY > 0) {
+      headerContent.classList.add("scrolled");
+      isScrolled = true;
+    } else {
+      headerContent.classList.remove("scrolled");
+      isScrolled = false;
+    }
 
     // Habilitar animaciones SÓLO cuando se hace la acción
     // (así evito que al hacer resize de la ventana se vea una animación extraña por la anchura)
@@ -38,11 +52,11 @@
       return;
     }
 
-    if (window.scrollY > 0 && !isScrolled) {
-      isScrolled = true;
-    } else if (window.scrollY === 0 && isScrolled) {
-      isScrolled = false;
-    } else {
+    if (window.scrollY === 0 && !isScrolled) {
+      return;
+    }
+
+    if (window.scrollY > 0 && isScrolled) {
       return;
     }
 
@@ -51,7 +65,7 @@
 
   document.addEventListener('astro:page-load', () => {
     // Al cargar la página, por las view transitions, el elemento se vuelve a cargar, así que lo vuelvo a buscar
-    headerContent = document.getElementById("header-nav-content");
+    headerContent = document.getElementById("header-nav-content") as HTMLDivElement;
 
     if (window.scrollY > 0) {
       isScrolled = true;

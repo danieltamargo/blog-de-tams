@@ -9,7 +9,7 @@ const showCardDani = Astro.cookies.get('show-card-dani')?.value === 'true';
 ---
 <div id="card-dani" 
 class={`flex-1 max-w-4xl relative xl:h-full ${showCardDani ? 'show' : ''}`}
-transition:persist
+transition:persist="card-dani"
 >
 <div class="absolute top-0 right-1/2 translate-x-1/2">
   <button 
