@@ -1,17 +1,19 @@
 ---
-import BackgroundPattern from '../components/BackgroundPattern.astro';
-import Header from '../components/Header.astro';
-import Footer from '../components/Footer.astro';
+import BackgroundPattern from '@components/BackgroundPattern.astro';
+import Header from '@components/Header.astro';
+import Footer from '@components/Footer.astro';
 import { ViewTransitions, fade } from 'astro:transitions';
 import CardDani from '@components/CardDani.astro';
 import Ratings from '@components/Ratings.astro';
 
 interface Props {
 	title: string;
+  mainWidth?: string;
 	showInfo?: boolean;
+  showRatings?: boolean;
 }
 
-const { title, showInfo = true } = Astro.props;
+const { title, mainWidth = "w-4xl", showInfo = true, showRatings = false } = Astro.props;
 ---
 <!doctype html>
 <html lang="es">
@@ -32,23 +34,187 @@ const { title, showInfo = true } = Astro.props;
       </div>
     </div>
 
-		<Header client:load />
+		<Header />
 		<div class="flex flex-col items-center xl:items-start xl:flex-row xl:flex-wrap xl:justify-center gap-6 max-w-[100svw] w-7xl py-12 px-6 mx-auto">
       <!-- Personal card aside -->
 			{showInfo && <CardDani transition:animate={fade({ duration: '0' })} transition:persist />}
 	
-			<main class="max-w-full w-4xl">
+			<main class:list={["max-w-full", mainWidth]}>
 				<slot />
 			</main>
 
       <div class="hidden border-4 border-blue-500"></div>
 		</div>
-
-    <Ratings transition:animate={fade({ duration: '0' })} />
+    
+    {showRatings && <Ratings transition:animate={fade({ duration: '0' })} />}
 
 		<Footer transition:animate={fade({ duration: '0' })} />
 	</body>
 </html>
+
+<style is:global>
+  .custom-notification-container {
+    pointer-events: none;
+    position: fixed;
+    top: 0;
+    right: 0;
+    z-index: 1000;
+    
+    width: 80vw;
+    max-width: 400px;
+    padding: 1rem;
+    
+    overflow: hidden;
+    
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    
+    --progress-bar-height: 5px;
+    --custom-notification-duration: 5000ms;
+  }
+
+  .custom-notification {
+    border-radius: 4px;
+    background-color: white;
+    box-shadow: 0 0 8px black;
+    color: #2f2f2f;
+    position: relative;
+    padding-bottom: var(--progress-bar-height);
+    opacity: 1;
+    overflow: hidden;
+    
+    animation: custom-notification-dismiss var(--custom-notification-duration) cubic-bezier(0, 1.16, 0.9, 1);
+  }
+
+  .alert-content {
+    padding: 1rem;
+  }
+
+  .alert-content h3 {
+    font-weight: 700;
+    padding-bottom: 1rem;
+  }
+
+  .custom-notification.info {
+    --progress-bar-color: darkblue;
+  }
+  .custom-notification.success {
+    --progress-bar-color: green;
+  }
+  .custom-notification.warning {
+    --progress-bar-color: darkorange;
+  }
+  .custom-notification.error {
+    --progress-bar-color: darkred;
+  }
+
+  .custom-notification::after {
+    content: " ";
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    height: var(--progress-bar-height);
+    background-color: var(--progress-bar-color);
+    
+    animation-name: custom-notification-progress-bar;
+    animation-fill-mode: forwards;
+    animation-duration: var(--custom-notification-duration);
+    animation-timing-function: cubic-bezier(0.39, 0.575, 0.565, 1);
+  }
+
+  #algorithm-results {
+    margin-top: 2rem;
+    padding: 1rem 0;
+    
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    
+    overflow: hidden;
+    
+    transform: scaleY(0);
+    transform-origin: top;
+    
+    &.show {
+      transition: transform 500ms;
+      transform: scaleY(1);
+    }
+    
+    & .ar-card {
+      flex: 1 1 150px;
+
+      animation-name: algorithm-result-card;
+      animation-duration: 1200ms;
+      animation-timing-function: cubic-bezier(0.075, 0.82, 0.165, 1);
+      animation-fill-mode: forwards;
+      --animation-initial-bg-color: rgb(124, 124, 160);
+      --animation-final-bg-color: #f5f5f5;
+
+      background-color: var(--animation-final-bg-color);
+      background: linear-gradient(
+        180deg,
+        white 0%,
+        var(--animation-final-bg-color) 100%
+      );
+
+      transition: filter 500ms;
+
+      /* &.total-cost {
+        --animation-initial-bg-color: rgb(85, 187, 153);
+        --animation-final-bg-color: aquamarine;
+      } */
+      
+      &:nth-child(2) {
+        animation-delay: 100ms;
+      }
+      &:nth-child(3) {
+        animation-delay: 200ms;
+      }
+      &:nth-child(4) {
+        animation-delay: 300ms;
+      }
+
+      &:hover {
+        filter: brightness(0.9);
+      }
+    }
+  }
+
+  @keyframes custom-notification-progress-bar {
+    0% {
+      width: 100%;
+    }
+    
+    90% {
+      width: 0%;
+    }
+    
+    100% {
+      width: 0%;
+    }
+  }
+
+  @keyframes custom-notification-dismiss {
+    0% {
+      opacity: 0;
+      transform: translateX(100%);
+    }
+    
+    15% {
+      opacity: 1;
+      transform: translateX(0);
+    }
+    
+    90% {
+      opacity: 1;
+    }
+    
+    100% {
+      opacity: 0;
+    }
+  }
+</style>
 
 <script type="module">
   class CustomNotification {
@@ -126,9 +292,17 @@ const { title, showInfo = true } = Astro.props;
     alertsContainerDiv = null;
 
     constructor() {
-      const alertsContainerDiv = document.createElement("div");
-      alertsContainerDiv.classList.add("custom-notification-container");
-      document.body.appendChild(alertsContainerDiv);
+      this.refreshAlertsContainerDiv();
+    }
+
+    refreshAlertsContainerDiv() {
+      let alertsContainerDiv = document.querySelector(".custom-notification-container");
+
+      if (!alertsContainerDiv) {
+        alertsContainerDiv = document.createElement("div");
+        alertsContainerDiv.classList.add("custom-notification-container");
+        document.body.appendChild(alertsContainerDiv);
+      }
 
       this.alertsContainerDiv = alertsContainerDiv;
     }
@@ -328,6 +502,7 @@ const { title, showInfo = true } = Astro.props;
   }
 
   document.addEventListener("astro:page-load", () => {
+    window.CustomNotificationManager.refreshAlertsContainerDiv()
     blocks = document.querySelectorAll<HTMLDivElement>(".blob-hoverable")
     blocks.forEach((block: HTMLDivElement) => {
       block.removeEventListener("mouseenter", blobBlockMouseEnter)
@@ -370,7 +545,6 @@ const { title, showInfo = true } = Astro.props;
     currentScrollY = newScrollY
     currentScrollX = newScrollX
   })
-  
 </script>
 
 <style is:global>

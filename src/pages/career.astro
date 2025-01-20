@@ -1,0 +1,353 @@
+---
+import Layout from '@layouts/Layout.astro';
+
+const projects = [
+  {
+    client: "Innobide",
+    clientClasses: "text-blue-400",
+    name: "Finamik",
+    nameClasses: "text-blue-700",
+    description: `Un auténtico desafío, diseñar la arquitectura de una aplicación web desde cero y desarrollar cada una de sus partes.<br><br>Encargarme del proceso y la toma de decisiones, así como de la implementación de las funcionalidades y la base de datos. ¡Un proyecto muy completo!<br><br>Puedes probar la aplicación en <a href="https://app.finamik.com" target="_blank" class="text-blue-600 hover:underline">finamik.com</a>.`,
+    technologies: [ "Desarrollo web", "Laravel", "MySQL", "Suscripciones", "Jira", "Google Captcha v3", "SaaS" ],
+  },
+  {
+    client: undefined,
+    name: undefined,
+    description: `Scrapear datos de múltiples fuentes (páginas web, APIs, etc) para obtener información, procesarla y almacenarla en una base de datos.
+    Implementar mejoras en una aplicación multiplataforma existente (Flutter) y corregir el comportamiento de los HTTP Endpoints de la base de datos así como 
+    mejorar la arquitectura de la base de datos.`,
+    technologies: [ "Web scraping", "Admin panel", "API", "Python", "Flutter", "MongoDB", "Google Maps", "Automatización" ],
+  },
+  {
+    client: undefined,
+    name: undefined,
+    description: "Integrar en una aplicación web una pasarela de pago y un sistema de suscripciones, convirtiéndola en un modelo de negocio SaaS.",
+    technologies: [ "Stripe", "Integrar servicios de terceros", "SaaS" ],
+  }
+]
+
+---
+
+<Layout title="Mi trayectoria" mainWidth='w-7xl' showInfo={false}>
+
+  <div id="career-landing">
+    <div id="career-landing-header">
+      <p class="opacity-0" aria-hidden="true">Mi trayectoria</p>
+      <div>
+        <div>Mi trayectoria</div>
+      </div>
+      <div style="--delay: 3s">
+        <div>Mi motivación</div>
+      </div>
+      <div style="--delay: 6s">
+        <div>Mi progreso</div>
+      </div>
+    </div>
+    <div id="career-landing-description">
+      <p>
+        Soy un desarrollador de software con nociones de desarrollo y ciberseguridad. Me gusta aprender y experimentar con nuevas tecnologías y lenguajes de programación.
+      </p>
+    </div>
+    <div id="career-landing-bottom">
+      <p>Scrollea para ver</p>
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-400 animate-bounce" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path>
+    </div>
+  </div>
+
+  <div class="space-y-4">
+    <div class="relative overflow-hidden py-8 mb-12 screen-block blob-hoverable">
+      <div id="career-content">
+        <div id="projects" class="career-section">
+          {projects.map((project) => (
+            <div class="career-card waiting-for-intersection">
+              <h2 class:list={["text-3xl font-bold", project.nameClasses, project.name === undefined && "text-gray-400"]} >
+                { project.name ?? "Censurado" }</h2>
+              <h3 class:list={["text-lg font-bold mb-2", project.clientClasses, project.client === undefined && "text-gray-400"]} >
+                { project.client ?? "Censurado" }
+              </h3>
+              
+              <p class="text-gray-700 font-medium" set:html={project.description}></p>
+              {project.technologies && (
+                <div class="flex gap-2 mt-6 flex-wrap">
+                  {project.technologies.map((tech) => (
+                    <span class="bg-gray-100/80 backdrop-blur-sm text-gray-700 px-3 py-1 rounded-full text-sm whitespace-nowrap">
+                      {tech}
+                    </span>
+                  ))}
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
+
+        <div id="projects" class="career-section">
+          {projects.map((project) => (
+            <div class="career-card waiting-for-intersection">
+              <h2 class:list={["text-3xl font-bold", project.nameClasses, project.name === undefined && "text-gray-400"]} >
+                { project.name ?? "Censurado" }</h2>
+              <h3 class:list={["text-lg font-bold mb-2", project.clientClasses, project.client === undefined && "text-gray-400"]} >
+                { project.client ?? "Censurado" }
+              </h3>
+              
+              <p set:html={project.description}></p>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <!-- Formación notoria -->
+
+      <!-- Experiencia adicional -->
+
+      <!-- Lenguajes -->
+
+    </div>
+  </div>
+</Layout>
+
+<script>
+  // Obtener todas las secciones
+  const sections: HTMLDivElement[] = Array.from(document.querySelectorAll<HTMLDivElement>(".career-section"));
+
+  const hideScrollHint = () => {
+    if (window.scrollY > 250) {
+      document.getElementById("career-landing-bottom")?.classList.add("hide");
+      document.removeEventListener("scroll", hideScrollHint);
+    }
+  }
+  document.addEventListener("scroll", hideScrollHint);
+
+  document.addEventListener("scroll", () => {
+    sections.forEach((section) => {
+      // Obtener las coordenadas absolutas de la sección
+      const sectionTop = section.getBoundingClientRect().top + window.scrollY;
+      const sectionBottom = sectionTop + section.offsetHeight;
+
+      // Obtener la parte baja de la ventana de visualización (- 100 como threshold)
+      const viewportBottom = window.scrollY + window.innerHeight - 200;
+
+      // Calcular cuánto ha avanzado la línea
+      if (viewportBottom > sectionTop) {
+        const progress = Math.min(
+          1,
+          (viewportBottom - sectionTop) / (sectionBottom - sectionTop)
+        );
+
+        // Ajustar el ancho de la línea usando una propiedad CSS personalizada
+        if (progress > 0.1) {
+          section.style.setProperty("--height", `${progress * 100}%`);
+        } else {
+          section.style.setProperty("--height", "0");
+        }
+      }
+
+      // Si la animación está completa, asignar width y eliminar la sección de la lista
+      if (viewportBottom - 10 >= sectionBottom) {
+        section.style.setProperty("--width", "100%");
+      } else {
+        section.style.setProperty("--width", "0");
+      }
+    });
+  });
+
+  
+  const careerCards = document.querySelectorAll(".career-card");
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        entry.target.classList.remove("waiting-for-intersection");
+      }
+    });
+  }, {
+    threshold: 0.5
+  });
+
+  careerCards.forEach((card) => {
+    observer.observe(card);
+  });
+</script>
+
+<style>
+  #career-landing {
+    position: relative;
+    z-index: 5;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding-bottom: 20rem;
+  }
+  #career-landing-header {
+    user-select: none;
+    position: relative;
+    overflow: hidden;
+
+    width: 100%;
+    text-align: center;
+    font-size: clamp(1rem, 10vw, 8rem);
+    font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+  }
+  #career-landing-header > *:not([aria-hidden]) {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transform: translateY(-100%);
+    animation-name: career-landing-header-p;
+    animation-duration: 9s;
+    animation-timing-function: ease-in-out;
+    animation-iteration-count: infinite;
+    animation-delay: var(--delay, 0s);
+
+    & > div {
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      
+      animation: career-landing-header-anim 7s infinite alternate;
+      background-image: linear-gradient(90deg, 
+        #33cc33, 
+        #3399ff, 
+        #9900cc, 
+        #ff0000);
+      background-size: 400%;
+    }
+  }
+  #career-landing-description {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 0 3rem;
+    text-align: center;
+    font-weight: 500;
+    color: #45484e;
+  }
+  #career-landing-bottom {
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    margin-bottom: 2rem;
+    font-weight: 500;
+    color: #45484e;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+
+    transition: opacity 0.3s ease-in-out;
+
+    &.hide {
+      opacity: 0;
+    }
+  }
+
+  @keyframes career-landing-header-p {
+    0% {
+      transform: translateY(-100%);
+      opacity: 0;
+    }
+    2% {
+      opacity: 0;
+    }
+    5% {
+      transform: translateY(0);
+      opacity: 1;
+    }
+    33% {
+      transform: translateY(0);
+      opacity: 1;
+    }
+    35% {
+      opacity: 0;
+    }
+    38% {
+      transform: translateY(100%);
+      opacity: 0;
+    }
+    38.00001% {
+      transform: translateY(-100%);
+    }
+  }
+
+  @keyframes career-landing-header-anim {
+    0% {
+      background-position: 0% 0%;
+    }
+    25% {
+      background-position: 25% 50%;
+    }
+    50% {
+      background-position: 50% 100%;
+    }
+    75% {
+      background-position: 75% 50%;
+    }
+    100% {
+      background-position: 100% 0%;
+    }
+  }
+
+  #career-content {
+    padding: 3rem;
+    max-width: 800px;
+    margin: 0 auto;
+  }
+
+  .career-section {
+    padding-left: 3rem;
+    padding-bottom: 3rem;
+    position: relative;
+
+    display: flex;
+    flex-direction: column;
+    gap: 10rem;
+    padding: 4rem;
+
+    --border-width: 4px;
+    --border-color: #a7b7d6;
+  }
+  .career-section::before {
+    width: var(--border-width, 0);
+    height: var(--height, 0);
+    background-color: var(--border-color);
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    border-radius: 8px;
+    transition: height 0.2s ease, width 0.6s ease;
+  }
+  .career-section::after {
+    height: var(--border-width, 0);
+    width: var(--width, 0);
+    background-color: var(--border-color);
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    border-radius: 8px;
+    transition: height 0.1s ease, width 0.6s ease;
+  }
+  .career-section:nth-of-type(even)::before {
+    right: 0;
+    left: auto;
+  }
+  .career-section:nth-of-type(even)::after {
+    right: 0;
+    left: auto;
+  }
+
+  .career-card {
+    transition: opacity 0.8s ease-in-out;
+  }
+  .career-card.waiting-for-intersection {
+    opacity: 0;
+  }
+
+</style>

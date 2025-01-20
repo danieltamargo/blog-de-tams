@@ -14,7 +14,7 @@ const allPosts = [...blogs, ...techConcepts];
 allPosts.sort((a, b) => new Date(b.data.date).getTime() - new Date(a.data.date).getTime());
 ---
 
-<Layout title="Blogsky">
+<Layout title="Blogsky" showRatings={true}>
   <CategoryCarousel />
 
   <div class="space-y-4">
