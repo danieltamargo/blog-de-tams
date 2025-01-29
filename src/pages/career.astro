@@ -4,28 +4,64 @@ import Layout from '@layouts/Layout.astro';
 const projects = [
   {
     client: "Innobide",
-    clientClasses: "text-blue-400",
+    clientClasses: "text-[#80DAEB]",
     name: "Finamik",
-    nameClasses: "text-blue-700",
-    description: `Un auténtico desafío, diseñar la arquitectura de una aplicación web desde cero y desarrollar cada una de sus partes.<br><br>Encargarme del proceso y la toma de decisiones, así como de la implementación de las funcionalidades y la base de datos. ¡Un proyecto muy completo!<br><br>Puedes probar la aplicación en <a href="https://app.finamik.com" target="_blank" class="text-blue-600 hover:underline">finamik.com</a>.`,
-    technologies: [ "Desarrollo web", "Laravel", "MySQL", "Suscripciones", "Jira", "Google Captcha v3", "SaaS" ],
+    nameClasses: "text-[#009BA5]",
+    description: `Un auténtico desafío, diseñar la arquitectura de una nueva aplicación web a medida desde cero y desarrollar cada una de sus partes además de estructurar la base de datos teniendo en cuenta la proyección a futuro del proyecto.<br><br>
+    
+    Encargarme del proceso y la toma de decisiones, así como de la implementación de las funcionalidades y trabajo de terceros.<br><br>
+    Aprendí mucho sobre llevar cómo tener una comunicación clara y estable con el cliente, cómo realizar una toma de requisitos eficaz y documentada<br><br>
+
+    En resumen, ¡un proyecto muy completo!<br>Puedes probar la aplicación en <a href="https://app.finamik.com" target="_blank" class="text-[#009BA5] hover:underline">finamik.com</a>.`,
+    tags: [ "Líder de proyecto", "Desarrollo full-stack", "Laravel", "Livewire", "Alpine", "Stripe", "Jira", "Google Captcha v3", "SaaS" ],
   },
   {
     client: undefined,
     name: undefined,
-    description: `Scrapear datos de múltiples fuentes (páginas web, APIs, etc) para obtener información, procesarla y almacenarla en una base de datos.
-    Implementar mejoras en una aplicación multiplataforma existente (Flutter) y corregir el comportamiento de los HTTP Endpoints de la base de datos así como 
-    mejorar la arquitectura de la base de datos.`,
-    technologies: [ "Web scraping", "Admin panel", "API", "Python", "Flutter", "MongoDB", "Google Maps", "Automatización" ],
+    description: `Scrapear datos de múltiples fuentes (páginas web, APIs, etc) para obtener información, procesarla y almacenarla en una base de datos.<br><br>
+
+    Implementar mejoras en una aplicación multiplataforma existente (desarrollada en Flutter) y corregir errores a lo largo de la misma así como de los HTTP Endpoints de la base de datos, además de mejorar la arquitectura de la base de datos para que sea más consistente y ligera y por ende, más eficaz.`,
+    tags: [ "Web scraping", "Automatización", "API", "Flutter", "MongoDB", "Google Maps" ],
   },
   {
     client: undefined,
     name: undefined,
     description: "Integrar en una aplicación web una pasarela de pago y un sistema de suscripciones, convirtiéndola en un modelo de negocio SaaS.",
-    technologies: [ "Stripe", "Integrar servicios de terceros", "SaaS" ],
+    tags: [ "Stripe", "Integrar servicios de terceros", "SaaS" ],
   }
 ]
 
+const extras = [
+  {
+    client: "Fomento San Sebastián",
+    clientClasses: "text-[#c70808]",
+    name: "Charla de tecnología",
+    nameClasses: "text-[#c70808]",
+    description: `Impartir la charla "Cómo elegir las herramientas tecnológicas para mi proyecto de emprendimiento" en EKINN para el programa de emprendimiento de Fomento San Sebastián.<br><br>Mostrando múltiples herramientas para impulsar el emprendimiento de PYMES y Startups, y analizando diferentes criterios y enfoques a tener en cuenta a la hora de seleccionarlas.`,
+    tags: [ "Charla", "Tecnología", "Emprendimiento", "PYMES", "Startups" ],
+  },
+  {
+    client: "Múltiples clientes",
+    name: "Profesor de programación",
+    description: `Más de 300 horas como profesor de varios cursos de programación (principalmente Python y Java) enseñando: introducción a la programación, POO, web scraping, automatizaciones, cómo configurar el entorno, ciberseguridad (básico), etc.<br><br>Impartidos tanto de manera presencial como a través de plataformas de formación online.`,
+    tags: [ "Stripe", "Integrar servicios de terceros", "SaaS" ],
+  }
+]
+
+const sections = [
+  {
+    id: "projects",
+    name: "Proyectos",
+    description: "Algunos de los proyectos en los que he trabajado",
+    items: projects,
+  },
+  {
+    id: "extras",
+    name: "Extras",
+    description: "Algunas experiencias adicionales",
+    items: extras,
+  }
+]
 ---
 
 <Layout title="Mi trayectoria" mainWidth='w-7xl' showInfo={false}>
@@ -40,7 +76,7 @@ const projects = [
         <div>Mi motivación</div>
       </div>
       <div style="--delay: 6s">
-        <div>Mi progreso</div>
+        <div>Mis capacidades</div>
       </div>
     </div>
     <div id="career-landing-description">
@@ -58,41 +94,30 @@ const projects = [
   <div class="space-y-4">
     <div class="relative overflow-hidden py-8 mb-12 screen-block blob-hoverable">
       <div id="career-content">
-        <div id="projects" class="career-section">
-          {projects.map((project) => (
-            <div class="career-card waiting-for-intersection">
-              <h2 class:list={["text-3xl font-bold", project.nameClasses, project.name === undefined && "text-gray-400"]} >
-                { project.name ?? "Censurado" }</h2>
-              <h3 class:list={["text-lg font-bold mb-2", project.clientClasses, project.client === undefined && "text-gray-400"]} >
-                { project.client ?? "Censurado" }
-              </h3>
-              
-              <p class="text-gray-700 font-medium" set:html={project.description}></p>
-              {project.technologies && (
-                <div class="flex gap-2 mt-6 flex-wrap">
-                  {project.technologies.map((tech) => (
-                    <span class="bg-gray-100/80 backdrop-blur-sm text-gray-700 px-3 py-1 rounded-full text-sm whitespace-nowrap">
-                      {tech}
-                    </span>
-                  ))}
-                </div>
-              )}
-            </div>
-          ))}
-        </div>
-
-        <div id="projects" class="career-section">
-          {projects.map((project) => (
-            <div class="career-card waiting-for-intersection">
-              <h2 class:list={["text-3xl font-bold", project.nameClasses, project.name === undefined && "text-gray-400"]} >
-                { project.name ?? "Censurado" }</h2>
-              <h3 class:list={["text-lg font-bold mb-2", project.clientClasses, project.client === undefined && "text-gray-400"]} >
-                { project.client ?? "Censurado" }
-              </h3>
-              
-              <p set:html={project.description}></p>
-            </div>
-          ))}
+        {sections.map((section) => (
+          <div id={section.id} class="career-section">
+            {section.items.map((item) => (
+              <div class="career-card waiting-for-intersection">
+                <h2 class:list={["text-3xl font-bold", item.nameClasses, item.name === undefined && "text-gray-400"]} >
+                  { item.name ?? "Censurado" }</h2>
+                <h3 class:list={["text-lg font-bold mb-2", item.clientClasses, item.client === undefined && "text-gray-400"]} >
+                  { item.client ?? "Censurado" }
+                </h3>
+                
+                <p class="text-gray-700" set:html={item.description}></p>
+                {item.tags && (
+                  <div class="flex gap-2 mt-6 flex-wrap">
+                    {item.tags.map((tech) => (
+                      <span class="bg-gray-100/80 backdrop-blur-sm text-gray-700 px-3 py-1 rounded-full text-sm whitespace-nowrap cursor-default hover:bg-gray-200/80">
+                        {tech}
+                      </span>
+                    ))}
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+        ))}
         </div>
       </div>
 
@@ -232,7 +257,7 @@ const projects = [
     bottom: 0;
     left: 50%;
     transform: translateX(-50%);
-    margin-bottom: 2rem;
+    margin-bottom: 10rem;
     font-weight: 500;
     color: #45484e;
     display: flex;
@@ -341,6 +366,9 @@ const projects = [
   .career-section:nth-of-type(even)::after {
     right: 0;
     left: auto;
+  }
+  .career-section:not(:first-of-type) {
+    margin-top: -4px; 
   }
 
   .career-card {
