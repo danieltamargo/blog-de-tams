@@ -8,7 +8,7 @@ export default defineConfig({
   // https://docs.astro.build/en/guides/prefetch/
   prefetch: {
     defaultStrategy: 'viewport', // Debemos indicar data-astro-prefetch="tipo" en los enlaces a precargar
-    prefetchAll: 'true', // Precarga todas las páginas (habilitado en Astro por defecto con las ViewTransitions)
+    prefetchAll: true, // Precarga todas las páginas (habilitado en Astro por defecto con las ViewTransitions)
   },
 
   integrations: [mdx(), tailwind()],
