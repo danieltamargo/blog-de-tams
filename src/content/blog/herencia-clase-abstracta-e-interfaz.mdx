@@ -9,16 +9,6 @@ import "@styles/blog-post.css";
 import MultiCodeBlock from "@components/MultiCodeBlock.astro";
 
 
-<MultiCodeBlock
-blocks={[
-    {
-        lang: "java",
-        name: "herencia/clase/java"
-    }
-]}
-/>
-
-
 # Herencia, clase abstracta e interfaz
 
 Recuerdo como si fuese ayer el día en el que me dijeron:  
@@ -65,146 +55,61 @@ Vamos a verlas una a una, utilizaremos Java porque es un lenguaje orientado a ob
 
 ## Clase
 
-```java
-public class Animal {
-    private String nombre;
-    private int edad;
-
-    // Constructor: método que se ejecuta al instanciar un objeto
-    public Animal(String nombre, int edad) {
-        this.nombre = nombre;
-        this.edad = edad;
-    }
-
-    public void emitirSonido() {
-        System.out.println("¡Grrrrr!");
-    }
-}
-```
+<MultiCodeBlock
+basePath="poo/clase"
+langs={["java", "python"]}
+/>
 
 
 ## Objeto
 
-```java
-// Como el constructor recibe nombre y edad, se los pasamos al instanciar el objeto
-Animal animal = new Animal("Rex", 5);
-```
+<MultiCodeBlock
+basePath="poo/objeto"
+langs={["java", "python"]}
+/>
 
 > Clase y objeto van de la mano, si no tienes una clase, no puedes instanciar objetos de ella.
 
 
 ## Herencia
 
-```java
-// Definimos la clase padre
-public class Animal {
-    private String nombre;
-    private int edad;
-
-    public Animal(String nombre, int edad) {
-        this.nombre = nombre;
-        this.edad = edad;
-    }
-
-    public void emitirSonido() {
-        System.out.println("¡Grrrrr!");
-    }
-}
-
-// Y ahora podemos crear subclases que hereden de ella
-public class Perro extends Animal {
-    public Perro(String nombre, int edad) {
-        super(nombre, edad); // A través de super llamamos al constructor de la clase padre
-    }
-
-    @Override
-    public void emitirSonido() {
-        System.out.println("¡Guau guau!");
-    }
-}
-
-public class Gato extends Animal {
-    public Gato(String nombre, int edad) {
-        super(nombre, edad);
-    }
-
-    @Override
-    public void emitirSonido() {
-        System.out.println("¡Miau!");
-    }
-}
-```
+<MultiCodeBlock
+basePath="poo/herencia"
+langs={["java", "python"]}
+/>
 
 > Las subclases heredan los métodos y propiedades de la clase padre, pero pueden sobreescribirlos para cambiar su comportamiento, lo que se llama **polimorfismo**.
 
 
 ## Clase abstracta
 
-```java
-public abstract class Animal {
-    private String nombre;
-    private int edad;
-
-    public Animal(String nombre, int edad) {
-        this.nombre = nombre;
-        this.edad = edad;
-    }
-
-    public abstract void emitirSonido();
-}
-
-// No se puede instanciar una clase abstracta
-Animal animal = new Animal("Rex", 5); // ❌ Error: Animal is abstract; cannot be instantiated
-```
+<MultiCodeBlock
+basePath="poo/clase-abstracta"
+langs={["java", "python"]}
+/>
 
 > Una clase abstracta no puede ser instanciada, solo sirve de estructura base para las subclases, que deben implementar los métodos abstractos.
 
-```java
-public class Perro extends Animal {
-    public Perro(String nombre, int edad) {
-        super(nombre, edad);
-    }
+<MultiCodeBlock
+basePath="poo/clase-abstracta-2"
+langs={["java", "python"]}
+/>
 
-    @Override
-    public void emitirSonido() {
-        System.out.println("¡Guau guau!");
-    }
-}
-
-Perrito perro = new Perro("Rex", 5); // ✅ Correcto
-```
 
 
 ## Interfaz
 
-```java
-public interface Animal {
-    void emitirSonido();
-}
-
-// No se puede instanciar una interfaz
-Animal animal = new Animal(); // ❌ Error: Animal is abstract; cannot be instantiated
-
-public class Perro implements Animal {
-    @Override
-    public void emitirSonido() {
-        System.out.println("¡Guau guau!");
-    }
-}
-```
+<MultiCodeBlock
+basePath="poo/interfaz"
+langs={["java", "python"]}
+/>
 
 > Una interfaz es un contrato que dice qué métodos deben implementar las clases que la implementen, pero no cómo deben hacerlo.
 
-```java
-public class Gato implements Animal {
-    @Override
-    public void emitirSonido() {
-        System.out.println("¡Miau!");
-    }
-}
-
-Gato gato = new Gato(); // ✅ Correcto
-```
+<MultiCodeBlock
+basePath="poo/interfaz-2"
+langs={["java", "python"]}
+/>
 
 
 ## Clase abstracta vs Interfaz

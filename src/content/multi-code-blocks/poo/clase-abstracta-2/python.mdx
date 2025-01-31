@@ -1,0 +1,15 @@
+```python
+from ABC import ABC, abstractmethod
+
+class Animal(ABC):
+    def __init__(self, nombre, edad):
+        self.nombre = nombre
+        self.edad = edad
+
+    @abstractmethod
+    def emitirSonido(self):
+        pass
+
+# No se puede instanciar una clase abstracta
+animal = Animal("Rex", 5) # ❌ Error
+```

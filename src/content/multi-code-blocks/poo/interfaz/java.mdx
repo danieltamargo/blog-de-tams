@@ -1,0 +1,15 @@
+```java
+public interface Animal {
+    void emitirSonido();
+}
+
+// No se puede instanciar una interfaz
+Animal animal = new Animal(); // ❌ Error
+
+public class Perro implements Animal {
+    @Override
+    public void emitirSonido() {
+        System.out.println("¡Guau guau!");
+    }
+}
+```

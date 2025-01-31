@@ -1,28 +1,24 @@
 ---
 import { getEntry, render } from 'astro:content';
 
-interface CodeBlockInfo {
-  lang: string;
-  name: string;
-}
-
 interface Props {
-  blocks: CodeBlockInfo[];
+  langs: String[];
+  basePath: string;
 }
 
-const { blocks } = Astro.props;
-const codeBlocks = []
+const { langs, basePath } = Astro.props;
+const codeBlocks = [];
 
 // Recoger los bloques de código y renderizarlos (son markdown)
-for (const block of blocks) {
-  const codeBlock = await getEntry('multi-code-blocks', `${block.name}-${block.lang}`);
+for (const lang of langs) {
+  const codeBlock = await getEntry('multi-code-blocks', `${basePath}/${lang}`);
   if (!codeBlock) {
     continue;
   }
 
   const { Content } = await render(codeBlock);
   codeBlocks.push({
-    "lang": block.lang,
+    "lang": lang,
     "content": Content // Para mostrarlo dinámicamente utilizaremos {block.content && <block.content />}
   });
 }
@@ -39,10 +35,10 @@ if (codeBlocks.length > 0 && !currentSelectedBlockLang.value) {
 }
 ---
 <div>
-  <div class="flex justify-end">
+  <div class="flex ml-auto w-fit mb-[-2.75rem] rounded overflow-hidden">
     {codeBlocks.map((block) => (
       <button 
-        class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded aria-selected:bg-blue-800"
+        class="bg-sky-700 hover:bg-sky-800 active:bg-sky-900 text-white font-medium text-sm py-2 px-4 aria-selected:bg-sky-600"
         data-lang={block.lang}
         data-code-block="true"
         aria-selected={block.lang === currentSelectedBlockLang.value ? 'true' : 'false'}

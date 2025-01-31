@@ -19,9 +19,7 @@ const techConcepts = defineCollection({
 })
 
 const multiCodeBlocks = defineCollection({
-  schema: z.object({
-    lang: z.string().min(1, "El lenguaje es obligatorio"),
-  })
+  schema: z.object({})
 })
 
 export const collections = { 

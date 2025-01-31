@@ -1,0 +1,24 @@
+```java
+public class Perro extends Animal {
+    public Perro(String nombre, int edad) {
+        super(nombre, edad);
+    }
+
+    @Override
+    public void emitirSonido() {
+        System.out.println("¡Guau guau!");
+    }
+}
+
+Perrito perro = new Perro("Rex", 5); // ✅ Correcto
+```
+
+```python
+class Perro(Animal):
+    def __init__(self, nombre, edad):
+        super().__init__(nombre, edad)
+
+    def emitir_sonido(self):
+        print("¡Guau guau!")
+    
+perro = Perro("Rex", 5) # ✅ Correcto

@@ -1,0 +1,39 @@
+```java
+// Definimos la clase padre
+public class Animal {
+    private String nombre;
+    private int edad;
+
+    public Animal(String nombre, int edad) {
+        this.nombre = nombre;
+        this.edad = edad;
+    }
+
+    public void emitirSonido() {
+        System.out.println("¡Grrrrr!");
+    }
+}
+
+// Y ahora podemos crear subclases que hereden de ella
+public class Perro extends Animal {
+    public Perro(String nombre, int edad) {
+        super(nombre, edad); // A través de super llamamos al constructor de la clase padre
+    }
+
+    @Override
+    public void emitirSonido() {
+        System.out.println("¡Guau guau!");
+    }
+}
+
+public class Gato extends Animal {
+    public Gato(String nombre, int edad) {
+        super(nombre, edad);
+    }
+
+    @Override
+    public void emitirSonido() {
+        System.out.println("¡Miau!");
+    }
+}
+```

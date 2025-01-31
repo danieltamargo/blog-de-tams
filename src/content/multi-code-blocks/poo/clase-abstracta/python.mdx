@@ -1,0 +1,15 @@
+```python
+from abc import ABC, abstractmethod
+
+class Animal(ABC):
+    @abstractmethod
+    def emitir_sonido(self):
+        pass
+
+# No se puede instanciar una interfaz
+animal = Animal() # ❌ Error
+
+class Perro(Animal):
+    def emitir_sonido(self):
+        print("¡Guau guau!")
+```
