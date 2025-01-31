@@ -1,0 +1,98 @@
+---
+import { getEntry, render } from 'astro:content';
+
+interface CodeBlockInfo {
+  lang: string;
+  name: string;
+}
+
+interface Props {
+  blocks: CodeBlockInfo[];
+}
+
+const { blocks } = Astro.props;
+const codeBlocks = []
+
+// Recoger los bloques de código y renderizarlos (son markdown)
+for (const block of blocks) {
+  const codeBlock = await getEntry('multi-code-blocks', `${block.name}-${block.lang}`);
+  if (!codeBlock) {
+    continue;
+  }
+
+  const { Content } = await render(codeBlock);
+  codeBlocks.push({
+    "lang": block.lang,
+    "content": Content // Para mostrarlo dinámicamente utilizaremos {block.content && <block.content />}
+  });
+}
+
+const currentSelectedBlockLang = Astro.cookies.get('selected-block-lang') ?? { value: undefined };
+
+if (codeBlocks.length > 0 && !currentSelectedBlockLang.value) {
+  currentSelectedBlockLang.value = codeBlocks[0].lang;
+
+  Astro.cookies.set('selected-block-lang', currentSelectedBlockLang.value, {
+    maxAge: 31536000,
+    path: '/'
+  });
+}
+---
+<div>
+  <div class="flex justify-end">
+    {codeBlocks.map((block) => (
+      <button 
+        class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded aria-selected:bg-blue-800"
+        data-lang={block.lang}
+        data-code-block="true"
+        aria-selected={block.lang === currentSelectedBlockLang.value ? 'true' : 'false'}
+        >
+          {block.lang.toUpperCase()}
+        </button>
+    ))}
+  </div>
+
+  {codeBlocks.map((block) => (
+    <div data-code-block={block.lang} data-lang={block.lang} style={{ display: block.lang === currentSelectedBlockLang.value ? 'block' : 'none' }}>
+        {block.content && <block.content />}
+    </div>
+  ))}
+</div>
+
+<script>
+  document.querySelectorAll('button').forEach((button) => {
+    button.addEventListener('click', (event) => {
+      const lang = (event.target as HTMLButtonElement).getAttribute('data-lang');
+
+      // Evitar cambiar el bloque si ya está seleccionado
+      const currentSelectedBlock = document.cookie.replace(/(?:(?:^|.*;\s*)selected-block-lang\s*=\s*([^;]*).*$)|^.*$/, "$1");
+      if (currentSelectedBlock === lang) {
+        return;
+      }
+
+      document.cookie = `selected-block-lang=${lang}; max-age=31536000; path=/`;
+
+      // Mostrar el bloque de código del lenguaje y ocultar los demás
+      document.querySelectorAll('div[data-code-block]').forEach((block: HTMLDivElement) => {
+        const blockLang = block.getAttribute('data-lang');
+
+        if (blockLang === lang) {
+          block.style.display = 'block';
+        } else {
+          block.style.display = 'none';
+        }
+      })
+
+      // Estilos del botón del lenguaje seleccionado
+      document.querySelectorAll('button[data-code-block]').forEach((button: HTMLButtonElement) => {
+        const buttonLang = button.getAttribute('data-lang');
+
+        if (buttonLang === lang) {
+          button.setAttribute('aria-selected', 'true');
+        } else {
+          button.setAttribute('aria-selected', 'false');
+        }
+      })
+    });
+  });
+</script>

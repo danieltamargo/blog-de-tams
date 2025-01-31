@@ -6,6 +6,17 @@ tags: ["programación", "diseño de software", "arquitectura", "tutorial"]
 ---
 import Image from "astro/components/Image.astro";
 import "@styles/blog-post.css";
+import MultiCodeBlock from "@components/MultiCodeBlock.astro";
+
+
+<MultiCodeBlock
+blocks={[
+    {
+        lang: "java",
+        name: "herencia/clase/java"
+    }
+]}
+/>
 
 
 # Herencia, clase abstracta e interfaz
@@ -75,10 +86,8 @@ public class Animal {
 ## Objeto
 
 ```java
-Animal animal = new Animal("Rex", 5);
-
 // Como el constructor recibe nombre y edad, se los pasamos al instanciar el objeto
-String nombre = "Rex";
+Animal animal = new Animal("Rex", 5);
 ```
 
 > Clase y objeto van de la mano, si no tienes una clase, no puedes instanciar objetos de ella.

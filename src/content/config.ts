@@ -18,4 +18,14 @@ const techConcepts = defineCollection({
   })
 })
 
-export const collections = { 'blog': blog, 'tech-concepts': techConcepts };
+const multiCodeBlocks = defineCollection({
+  schema: z.object({
+    lang: z.string().min(1, "El lenguaje es obligatorio"),
+  })
+})
+
+export const collections = { 
+  'blog': blog, 
+  'tech-concepts': techConcepts, 
+  'multi-code-blocks': multiCodeBlocks 
+};
