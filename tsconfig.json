@@ -9,6 +9,7 @@
       "@interfaces/*": ["src/interfaces/*"],
       "@utils/*": ["src/utils/*"],
       "@assets/*": ["assets/*"],
+      "@styles/*": ["src/styles/*"],
     }
   }
 }

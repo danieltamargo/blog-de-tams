@@ -1,0 +1,219 @@
+---
+title: "Herecia, clase abstracta e interfaz"
+description: "What the hell es la diferencia entre herencia, clase abstracta e interfaz"
+date: "2024-11-10"
+tags: ["programación", "diseño de software", "arquitectura", "tutorial"]
+---
+import Image from "astro/components/Image.astro";
+import "@styles/blog-post.css";
+
+
+# Herencia, clase abstracta e interfaz
+
+Recuerdo como si fuese ayer el día en el que me dijeron:  
+"La **Programación Orientada a Objetos** es un **paradigma** de programación que se basa en la **abstracción** de objetos y en la interacción entre ellos para crear programas informáticos".  
+Crearemos **clases** e **instanciaremos objetos**, daremos uso de la **herencia**, el **polimorfismo**, **clases abstractas** e **interfaces**."
+
+<Image 
+src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTfDB_fmYGdVZaASqh5JqVSqHWXzxXN4eVaCw&s" 
+alt="What the hell no entiendo nada"
+width="300px"
+height="195px"
+ />
+
+Mi cara fue un poema, ¿paradigma?, ¿abstracción?, ¿herencia?, ¿clases abstractas?, ¿interfaces?, ¿qué he desayunado hoy? Tantas dudas me derritieron el cerebro y dejaron en un estado de confusión y desesperación. Como si me hubiese stuneado la ulti de Ashe desde el otro lado del mapa.
+
+Así que si estás en la misma situación que yo, no te preocupes, vamos a intentar aclarar un poco el tema.
+
+Empecemos por una descripción directa de cada una.  
+Primero las sencillitas:
+- **Clase**  
+  Es una maldita plantilla que define las propiedades y métodos que tendrán los objetos que **instanciemos** de ella.
+- **Objeto**  
+  Es una instancia de una clase, es decir, básicamente coger esa plantilla y darle ciertos valores a sus propiedades.
+
+
+Y ahora las que me apuñalaron el cortex prefrontal:
+- **Paradigma**  
+  Es un modelo o patrón que se sigue para realizar una tarea, vamos, una fokin forma de hacer las cosas y estructurar tu código.
+
+- **Herencia**  
+  Defines una clase (se le llama clase padre) con la estructura base y una o varias subclases que heredan ese comportamiento y pueden extender, es decir, añadir sus propias movidas.
+
+- **Polimorfismo**  
+  Si tú heredas de una clase pero cambias cierto comportamiento base, estás poliformeando, chaval.
+
+- **Clase abstracta**  
+  Como la herencia, pero esa clase padre no puede ser instanciada, solo sirve de estructura base para las subclases.
+
+- **Interfaz**  
+  La mandona pero chill, la que dice qué es lo que van a tener la clases que la implementen, pero no cómo lo van a hacer.
+
+Vamos a verlas una a una, utilizaremos Java porque es un lenguaje orientado a objetos y estos conceptos le van al pelo.
+
+
+## Clase
+
+```java
+public class Animal {
+    private String nombre;
+    private int edad;
+
+    // Constructor: método que se ejecuta al instanciar un objeto
+    public Animal(String nombre, int edad) {
+        this.nombre = nombre;
+        this.edad = edad;
+    }
+
+    public void emitirSonido() {
+        System.out.println("¡Grrrrr!");
+    }
+}
+```
+
+
+## Objeto
+
+```java
+Animal animal = new Animal("Rex", 5);
+
+// Como el constructor recibe nombre y edad, se los pasamos al instanciar el objeto
+String nombre = "Rex";
+```
+
+> Clase y objeto van de la mano, si no tienes una clase, no puedes instanciar objetos de ella.
+
+
+## Herencia
+
+```java
+// Definimos la clase padre
+public class Animal {
+    private String nombre;
+    private int edad;
+
+    public Animal(String nombre, int edad) {
+        this.nombre = nombre;
+        this.edad = edad;
+    }
+
+    public void emitirSonido() {
+        System.out.println("¡Grrrrr!");
+    }
+}
+
+// Y ahora podemos crear subclases que hereden de ella
+public class Perro extends Animal {
+    public Perro(String nombre, int edad) {
+        super(nombre, edad); // A través de super llamamos al constructor de la clase padre
+    }
+
+    @Override
+    public void emitirSonido() {
+        System.out.println("¡Guau guau!");
+    }
+}
+
+public class Gato extends Animal {
+    public Gato(String nombre, int edad) {
+        super(nombre, edad);
+    }
+
+    @Override
+    public void emitirSonido() {
+        System.out.println("¡Miau!");
+    }
+}
+```
+
+> Las subclases heredan los métodos y propiedades de la clase padre, pero pueden sobreescribirlos para cambiar su comportamiento, lo que se llama **polimorfismo**.
+
+
+## Clase abstracta
+
+```java
+public abstract class Animal {
+    private String nombre;
+    private int edad;
+
+    public Animal(String nombre, int edad) {
+        this.nombre = nombre;
+        this.edad = edad;
+    }
+
+    public abstract void emitirSonido();
+}
+
+// No se puede instanciar una clase abstracta
+Animal animal = new Animal("Rex", 5); // ❌ Error: Animal is abstract; cannot be instantiated
+```
+
+> Una clase abstracta no puede ser instanciada, solo sirve de estructura base para las subclases, que deben implementar los métodos abstractos.
+
+```java
+public class Perro extends Animal {
+    public Perro(String nombre, int edad) {
+        super(nombre, edad);
+    }
+
+    @Override
+    public void emitirSonido() {
+        System.out.println("¡Guau guau!");
+    }
+}
+
+Perrito perro = new Perro("Rex", 5); // ✅ Correcto
+```
+
+
+## Interfaz
+
+```java
+public interface Animal {
+    void emitirSonido();
+}
+
+// No se puede instanciar una interfaz
+Animal animal = new Animal(); // ❌ Error: Animal is abstract; cannot be instantiated
+
+public class Perro implements Animal {
+    @Override
+    public void emitirSonido() {
+        System.out.println("¡Guau guau!");
+    }
+}
+```
+
+> Una interfaz es un contrato que dice qué métodos deben implementar las clases que la implementen, pero no cómo deben hacerlo.
+
+```java
+public class Gato implements Animal {
+    @Override
+    public void emitirSonido() {
+        System.out.println("¡Miau!");
+    }
+}
+
+Gato gato = new Gato(); // ✅ Correcto
+```
+
+
+## Clase abstracta vs Interfaz
+
+| Clase abstracta | Interfaz |
+| --------------- | -------- |
+| Puede tener métodos con implementación | Solo puede tener métodos abstractos |
+| Puede tener propiedades | No puede tener propiedades |
+| Una clase solo puede heredar de una clase abstracta | Una clase puede implementar varias interfaces |
+| Se usa para definir una estructura base | Se usa para definir un contrato |
+| Se usa cuando se quiere compartir código entre subclases | Se usa cuando se quiere definir un comportamiento común a varias clases |
+
+
+## Conclusión
+
+Cuando se habla de un paradigma de programación, hablamos de una manera de enfocar la programación, de estructurar el código, de organizarlo.  
+La POO es agradable porque nos permite modelar el programa con un enfoque "realista", hablando de objetos, propiedades (valores) y métodos (acciones).  
+
+Para poder darle profundidad y aprovechar al máximo la POO, disponemos de comportamientos como la herencia, el polimorfismo, las clases abstractas e interfaces, que no dejan de ser formas de estructurar nuestro código para que sea más fácil de mantener y extender.  
+
+Gracias a estas herramientas, podemos cumplir con los principios DRY y SOLID, que nos ayudan a escribir código más limpio, eficiente y fácil de mantener (esto se traduce en que si el día de mañana nos toca ponernos con nuestro propio código no queramos agredirnos fuertemente).
