@@ -25,16 +25,28 @@ for (const lang of langs) {
 
 const currentSelectedBlockLang = Astro.cookies.get('selected-block-lang') ?? { value: undefined };
 
-if (codeBlocks.length > 0 && !currentSelectedBlockLang.value) {
-  currentSelectedBlockLang.value = codeBlocks[0].lang;
-
-  Astro.cookies.set('selected-block-lang', currentSelectedBlockLang.value, {
-    maxAge: 31536000,
-    path: '/'
-  });
+if (codeBlocks.length > 0) {
+  if (currentSelectedBlockLang.value) {
+    // Comprobar si el lenguaje seleccionado está en la lista de bloques de código, si no, seleccionar el primero
+    const selectedBlock = codeBlocks.find((block) => block.lang === currentSelectedBlockLang.value);
+    if (!selectedBlock) {
+      currentSelectedBlockLang.value = codeBlocks[0].lang;
+    }
+  } else {
+    // Seleccionar el primer bloque de código si no existe ningún lenguaje seleccionado
+    currentSelectedBlockLang.value = codeBlocks[0].lang;
+  
+    Astro.cookies.set('selected-block-lang', currentSelectedBlockLang.value, {
+      maxAge: 31536000,
+      path: '/'
+    });
+  }
 }
 ---
-<div>
+<div
+class="mt-[-1.5rem]"
+data-code-block-wrapper={JSON.stringify(langs)}
+>
   <div class="flex ml-auto w-fit mb-[-2.75rem] rounded overflow-hidden">
     {codeBlocks.map((block) => (
       <button 
@@ -68,27 +80,38 @@ if (codeBlocks.length > 0 && !currentSelectedBlockLang.value) {
 
       document.cookie = `selected-block-lang=${lang}; max-age=31536000; path=/`;
 
-      // Mostrar el bloque de código del lenguaje y ocultar los demás
-      document.querySelectorAll('div[data-code-block]').forEach((block: HTMLDivElement) => {
-        const blockLang = block.getAttribute('data-lang');
+      // Seleccionar todos los code block wrappers
+      document.querySelectorAll('div[data-code-block-wrapper]').forEach((wrapper: HTMLDivElement) => {
+        const langs = JSON.parse(wrapper.getAttribute('data-code-block-wrapper'));
 
-        if (blockLang === lang) {
-          block.style.display = 'block';
-        } else {
-          block.style.display = 'none';
+        // Si el lenguaje seleccionado NO está en la lista de lenguajes, cancelar la acción
+        if (!langs.includes(lang)) {
+          console.log('NO')
+          return;
         }
-      })
 
-      // Estilos del botón del lenguaje seleccionado
-      document.querySelectorAll('button[data-code-block]').forEach((button: HTMLButtonElement) => {
-        const buttonLang = button.getAttribute('data-lang');
+        // Mostrar el bloque de código del lenguaje y ocultar los demás
+        wrapper.querySelectorAll('div[data-code-block]').forEach((block: HTMLDivElement) => {
+          const blockLang = block.getAttribute('data-lang');
 
-        if (buttonLang === lang) {
-          button.setAttribute('aria-selected', 'true');
-        } else {
-          button.setAttribute('aria-selected', 'false');
-        }
-      })
+          if (blockLang === lang) {
+            block.style.display = 'block';
+          } else {
+            block.style.display = 'none';
+          }
+        })
+
+        // Estilos del botón del lenguaje seleccionado
+        wrapper.querySelectorAll('button[data-code-block]').forEach((button: HTMLButtonElement) => {
+          const buttonLang = button.getAttribute('data-lang');
+
+          if (buttonLang === lang) {
+            button.setAttribute('aria-selected', 'true');
+          } else {
+            button.setAttribute('aria-selected', 'false');
+          }
+        })
+      });
     });
   });
 </script>

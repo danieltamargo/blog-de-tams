@@ -33,6 +33,14 @@ const projects = [
 
 const extras = [
   {
+    client: "Múltiples clientes",
+    clientClasses: "text-gray-600",
+    name: "Profesor de programación",
+    nameClasses: "text-gray-700",
+    description: `Más de 300 horas como profesor de varios cursos de programación (principalmente Python y Java) enseñando: introducción a la programación, POO, web scraping, automatizaciones, cómo configurar el entorno, ciberseguridad (básico), etc.<br><br>Impartidos tanto de manera presencial como a través de plataformas de formación online.`,
+    tags: [ "Stripe", "Integrar servicios de terceros", "SaaS" ],
+  },
+  {
     client: "Fomento San Sebastián",
     clientClasses: "text-[#c70808]",
     name: "Charla de tecnología",
@@ -40,12 +48,6 @@ const extras = [
     description: `Impartir la charla "Cómo elegir las herramientas tecnológicas para mi proyecto de emprendimiento" en EKINN para el programa de emprendimiento de Fomento San Sebastián.<br><br>Mostrando múltiples herramientas para impulsar el emprendimiento de PYMES y Startups, y analizando diferentes criterios y enfoques a tener en cuenta a la hora de seleccionarlas.`,
     tags: [ "Charla", "Tecnología", "Emprendimiento", "PYMES", "Startups" ],
   },
-  {
-    client: "Múltiples clientes",
-    name: "Profesor de programación",
-    description: `Más de 300 horas como profesor de varios cursos de programación (principalmente Python y Java) enseñando: introducción a la programación, POO, web scraping, automatizaciones, cómo configurar el entorno, ciberseguridad (básico), etc.<br><br>Impartidos tanto de manera presencial como a través de plataformas de formación online.`,
-    tags: [ "Stripe", "Integrar servicios de terceros", "SaaS" ],
-  }
 ]
 
 const sections = [
@@ -64,8 +66,7 @@ const sections = [
 ]
 ---
 
-<Layout title="Mi trayectoria" mainWidth='w-7xl' showInfo={false}>
-
+<Layout title="Mi trayectoria" mainWidth='w-screen' mainMaxWidth={null} showInfo={false}>
   <div id="career-landing">
     <div id="career-landing-header">
       <p class="opacity-0" aria-hidden="true">Mi trayectoria</p>
@@ -76,12 +77,14 @@ const sections = [
         <div>Mi motivación</div>
       </div>
       <div style="--delay: 6s">
-        <div>Mis capacidades</div>
+        <div>Mis habilidades</div>
       </div>
     </div>
     <div id="career-landing-description">
       <p>
-        Soy un desarrollador de software con nociones de desarrollo y ciberseguridad. Me gusta aprender y experimentar con nuevas tecnologías y lenguajes de programación.
+        Soy un desarrollador de software con nociones de arquitectura y ciberseguridad. Me gusta aprender y experimentar con nuevas tecnologías y técnicas.
+        <br><br>
+        Aquí tienes algunos de mis proyectos, experiencias y habilidades que he adquirido a lo largo de mi carrera.
       </p>
     </div>
     <div id="career-landing-bottom">
@@ -92,8 +95,9 @@ const sections = [
   </div>
 
   <div class="space-y-4">
-    <div class="relative overflow-hidden py-8 mb-12 screen-block blob-hoverable">
+    <div class="relative py-8 mb-12 screen-block blob-hoverable" id="career-content-wrapper">
       <div id="career-content">
+        <!-- Experiencia -->
         {sections.map((section) => (
           <div id={section.id} class="career-section">
             {section.items.map((item) => (
@@ -118,15 +122,20 @@ const sections = [
             ))}
           </div>
         ))}
+        <!-- 
+         <div class="career-section" style="height:10px;padding:10px"></div>
+        <div class="career-section" style="height:10px;padding:10px"></div>
+        <div class="career-section" style="height:10px;padding:10px"></div>
+        <div class="career-section" style="height:10px;padding:10px"></div> 
+        -->
         </div>
+        
+        <!-- Skills -->
+
+
+        <!-- Otros -->
+
       </div>
-
-      <!-- Formación notoria -->
-
-      <!-- Experiencia adicional -->
-
-      <!-- Lenguajes -->
-
     </div>
   </div>
 </Layout>
@@ -191,6 +200,7 @@ const sections = [
   careerCards.forEach((card) => {
     observer.observe(card);
   });
+
 </script>
 
 <style>
@@ -318,6 +328,11 @@ const sections = [
     }
   }
 
+  #career-content-wrapper {
+    width: 100vw;
+    overflow: hidden;
+  }
+
   #career-content {
     padding: 3rem;
     max-width: 800px;
@@ -348,7 +363,7 @@ const sections = [
     border-radius: 8px;
     transition: height 0.2s ease, width 0.6s ease;
   }
-  .career-section::after {
+  .career-section:not(:last-of-type)::after {
     height: var(--border-width, 0);
     width: var(--width, 0);
     background-color: var(--border-color);

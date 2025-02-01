@@ -10,11 +10,12 @@ import Blob from '@components/Blob.astro';
 interface Props {
 	title: string;
   mainWidth?: string;
+  mainMaxWidth?: string;
 	showInfo?: boolean;
   showRatings?: boolean;
 }
 
-const { title, mainWidth = "w-4xl", showInfo = true, showRatings = false } = Astro.props;
+const { title, mainWidth = "w-4xl", mainMaxWidth = "max-w-full", showInfo = true, showRatings = false } = Astro.props;
 ---
 <!doctype html>
 <html lang="es">
@@ -36,7 +37,7 @@ const { title, mainWidth = "w-4xl", showInfo = true, showRatings = false } = Ast
       <!-- Personal card aside -->
 			{showInfo && <CardDani />}
 	
-			<main class:list={["max-w-full", mainWidth]}>
+			<main class:list={[mainMaxWidth, mainWidth]}>
 				<slot />
 			</main>
 

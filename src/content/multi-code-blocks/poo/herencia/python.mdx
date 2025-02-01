@@ -11,7 +11,7 @@ class Animal:
 # Y ahora podemos crear subclases que hereden de ella
 class Perro(Animal):
     def __init__(self, nombre, edad):
-        super().__init__(nombre, edad) # A través de super() llamamos al constructor de la clase padre
+        super().__init__(nombre, edad) # Con super() llegamos al constructor de la clase padre
 
     def emitir_sonido(self):
         print("¡Guau guau!")
