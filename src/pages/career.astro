@@ -1,5 +1,6 @@
 ---
 import Layout from '@layouts/Layout.astro';
+import { Icon } from 'astro-icon/components'
 
 const projects = [
   {
@@ -64,6 +65,140 @@ const sections = [
     items: extras,
   }
 ]
+
+const skills = {
+  programmingLanguages: [
+    {
+      icon: "skill-icons:javascript",
+      tooltip: "JavaScript",
+    },
+    {
+      icon: "skill-icons:typescript",
+      tooltip: "TypeScript",
+    },
+    {
+      icon: "skill-icons:php-dark",
+      tooltip: "PHP",
+    },
+    {
+      icon: "skill-icons:python-dark",
+      tooltip: "Python",
+    },
+    {
+      icon: "skill-icons:css",
+      tooltip: "CSS3",
+    },
+    {
+      icon: "skill-icons:html",
+      tooltip: "HTML5",
+    },
+    {
+      icon: "skill-icons:java-dark",
+      tooltip: "Java",
+    },
+    {
+      icon: "skill-icons:cs",
+      tooltip: "C#",
+    },
+    {
+      icon: "skill-icons:swift",
+      tooltip: "Swift",
+    },
+    {
+      icon: "skill-icons:dotnet",
+      tooltip: ".NET",
+    },
+  ],
+
+  frameworks: [
+    {
+      icon: "skill-icons:laravel-dark",
+      tooltip: "Laravel",
+    },
+    {
+      icon: "skill-icons:nodejs-dark",
+      tooltip: "Node.js",
+    },
+    {
+      icon: "skill-icons:astro",
+      tooltip: "Astro",
+    },
+    {
+      icon: "skill-icons:angular-dark",
+      tooltip: "Angular",
+    },
+    {
+      icon: "skill-icons:django",
+      tooltip: "Django",
+    },
+    {
+      icon: "skill-icons:react-dark",
+      tooltip: "React",
+    },
+  ],
+
+  technologies: [
+    {
+      icon: "skill-icons:tailwindcss-dark",
+      tooltip: "Tailwind CSS",
+    },
+    {
+      icon: "skill-icons:bootstrap",
+      tooltip: "Bootstrap",
+    },
+    {
+      icon: "skill-icons:docker",
+      tooltip: "Docker",
+    },
+    {
+      icon: "skill-icons:powershell-dark",
+      tooltip: "PowerShell",
+    },
+    {
+      icon: "skill-icons:regex-dark",
+      tooltip: "Expresiones regulares",
+    },
+    {
+      icon: "devicon:jira",
+      tooltip: "Jira",
+    },
+    {
+      icon: "devicon:confluence",
+      tooltip: "Confluence",
+    },
+    {
+      icon: "devicon:anaconda",
+      tooltip: "Anaconda",
+    },
+    {
+      icon: "skill-icons:wordpress",
+      tooltip: "WordPress",
+    },
+  ],
+
+  databases: [
+    {
+      icon: "skill-icons:mysql-dark",
+      tooltip: "MySQL",
+    },
+    {
+      icon: "skill-icons:mongodb",
+      tooltip: "MongoDB",
+    },
+    {
+      icon: "skill-icons:dynamodb-dark",
+      tooltip: "DynamoDB",
+    },
+    {
+      icon: "skill-icons:sqlite",
+      tooltip: "SQLite",
+    },
+    {
+      icon: "skill-icons:redis-dark",
+      tooltip: "Redis",
+    },
+  ],
+}
 ---
 
 <Layout title="Mi trayectoria" mainWidth='w-screen' mainMaxWidth={null} showInfo={false}>
@@ -98,45 +233,69 @@ const sections = [
     <div class="relative py-8 mb-12 screen-block blob-hoverable" id="career-content-wrapper">
       <div id="career-content">
         <!-- Experiencia -->
-        {sections.map((section) => (
-          <div id={section.id} class="career-section">
-            {section.items.map((item) => (
-              <div class="career-card waiting-for-intersection">
-                <h2 class:list={["text-3xl font-bold", item.nameClasses, item.name === undefined && "text-gray-400"]} >
-                  { item.name ?? "Censurado" }</h2>
-                <h3 class:list={["text-lg font-bold mb-2", item.clientClasses, item.client === undefined && "text-gray-400"]} >
-                  { item.client ?? "Censurado" }
-                </h3>
-                
-                <p class="text-gray-700" set:html={item.description}></p>
-                {item.tags && (
-                  <div class="flex gap-2 mt-6 flex-wrap">
-                    {item.tags.map((tech) => (
-                      <span class="bg-gray-100/80 backdrop-blur-sm text-gray-700 px-3 py-1 rounded-full text-sm whitespace-nowrap cursor-default hover:bg-gray-200/80">
-                        {tech}
-                      </span>
-                    ))}
-                  </div>
-                )}
-              </div>
-            ))}
-          </div>
-        ))}
+        <div id="experience">
+          {sections.map((section) => (
+            <div id={section.id} class="career-section">
+              {section.items.map((item) => (
+                <div class="career-card waiting-for-intersection">
+                  <h2 class:list={["text-3xl font-bold", item.nameClasses, item.name === undefined && "text-gray-400"]} >
+                    { item.name ?? "Censurado" }</h2>
+                  <h3 class:list={["text-lg font-bold mb-2", item.clientClasses, item.client === undefined && "text-gray-400"]} >
+                    { item.client ?? "Censurado" }
+                  </h3>
+                  
+                  <p class="text-gray-700" set:html={item.description}></p>
+                  {item.tags && (
+                    <div class="flex gap-2 mt-6 flex-wrap">
+                      {item.tags.map((tech) => (
+                        <span class="bg-gray-100/80 backdrop-blur-sm text-gray-700 px-3 py-1 rounded-full text-sm whitespace-nowrap cursor-default hover:bg-gray-200/80">
+                          {tech}
+                        </span>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+          ))}
+        </div>
         <!-- 
          <div class="career-section" style="height:10px;padding:10px"></div>
         <div class="career-section" style="height:10px;padding:10px"></div>
         <div class="career-section" style="height:10px;padding:10px"></div>
         <div class="career-section" style="height:10px;padding:10px"></div> 
         -->
-        </div>
         
         <!-- Skills -->
+        <div id="skills" class="group">
+          <!-- Loop through all skills -->
+          {Object.entries(skills).map(([category, items]) => (
+            <div class="flex justify-center gap-4 mt-8 group-hover:mt-12 transition-all flex-wrap">
+              {items.map((skill) => (
+                <div class="transition-all opacity-0 blur-lg">
+                  <Icon 
+                  name={skill.icon} 
+                  width={56} 
+                  height={56} 
+                  data-tooltip={skill.tooltip}
+                  class="transition-all group-hover:grayscale hover:!grayscale-0 hover:scale-110"
+                  />
+                </div>
+              ))}
+            </div>
+          ))}
 
+        </div>
 
         <!-- Otros -->
 
       </div>
     </div>
+  </div>
+
+  <div id="skills-tooltip" class="pointer-events-none fixed top-0 left-0 z-50 p-2 -translate-x-1/2 bg-gray-800 text-white rounded-md hidden">
+    <p class="text-sm">Test</p>
+    <span class="w-2 h-2 bg-gray-800 absolute top-full left-1/2 -translate-y-1/2 -translate-x-1/2 rotate-45"></span>
   </div>
 </Layout>
 
@@ -184,13 +343,13 @@ const sections = [
       }
     });
   });
-
   
   const careerCards = document.querySelectorAll(".career-card");
-  const observer = new IntersectionObserver((entries) => {
+  const careerCardsObserver = new IntersectionObserver((entries) => {
     entries.forEach((entry) => {
       if (entry.isIntersecting) {
         entry.target.classList.remove("waiting-for-intersection");
+        careerCardsObserver.unobserve(entry.target);
       }
     });
   }, {
@@ -198,7 +357,54 @@ const sections = [
   });
 
   careerCards.forEach((card) => {
-    observer.observe(card);
+    careerCardsObserver.observe(card);
+  });
+
+
+  const skills = document.getElementById("skills");
+  const skillsIcons = skills.querySelectorAll("[data-tooltip]");
+
+  const skillObserver = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        const timeoutTime = 75;
+
+        skillsIcons.forEach(( icon: HTMLElement, index: number) => {
+          setTimeout(() => {
+            icon.parentElement.classList.remove("opacity-0");
+            icon.parentElement.classList.remove("blur-lg");
+          }, timeoutTime * index);
+        });
+
+
+        skillObserver.unobserve(entry.target);
+        skillObserver.disconnect();
+      }
+    });
+  }, {
+    threshold: 0.5
+  });
+
+  skillObserver.observe(skills);
+
+  // Tooltips
+  const skillsTooltip = document.getElementById("skills-tooltip");
+
+  skillsIcons.forEach((icon) => {
+    icon.addEventListener("mouseenter", (e) => {
+      const tooltip = icon.getAttribute("data-tooltip");
+      const iconRect = icon.getBoundingClientRect();
+
+      skillsTooltip.innerHTML = `<p class="text-sm">${tooltip}</p>`;
+      skillsTooltip.style.top = `${iconRect.top - (iconRect.height / 2) - 15}px`;
+      skillsTooltip.style.left = `${iconRect.left + iconRect.width / 2}px`;
+      skillsTooltip.classList.remove("hidden");
+    });
+
+    icon.addEventListener("mouseleave", () => {
+      console.log("leave");
+      skillsTooltip.classList.add("hidden");
+    });
   });
 
 </script>
@@ -333,8 +539,11 @@ const sections = [
     overflow: hidden;
   }
 
-  #career-content {
+  #career-content > div {
     padding: 3rem;
+  }
+  
+  #experience {
     max-width: 800px;
     margin: 0 auto;
   }
@@ -393,4 +602,7 @@ const sections = [
     opacity: 0;
   }
 
+  #skills {
+    background-color: rgb(226, 245, 255);
+  }
 </style>

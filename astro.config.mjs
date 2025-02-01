@@ -1,6 +1,7 @@
 import { defineConfig } from 'astro/config';
 import mdx from '@astrojs/mdx';
 import tailwind from '@astrojs/tailwind';
+import icon from 'astro-icon';
 
 export default defineConfig({
   output: 'server',
@@ -11,7 +12,11 @@ export default defineConfig({
     prefetchAll: true, // Precarga todas las páginas (habilitado en Astro por defecto con las ViewTransitions)
   },
 
-  integrations: [mdx(), tailwind()],
+  integrations: [
+    mdx(), 
+    tailwind(), 
+    icon()
+  ],
   markdown: {
     shikiConfig: {
       themes: {

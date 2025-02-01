@@ -61,7 +61,10 @@ data-code-block-wrapper={JSON.stringify(langs)}
   </div>
 
   {codeBlocks.map((block) => (
-    <div data-code-block={block.lang} data-lang={block.lang} style={{ display: block.lang === currentSelectedBlockLang.value ? 'block' : 'none' }}>
+    <div 
+    data-code-block={block.lang} 
+    data-lang={block.lang} 
+    style={{ display: block.lang === currentSelectedBlockLang.value ? 'block' : 'none' }}>
         {block.content && <block.content />}
     </div>
   ))}

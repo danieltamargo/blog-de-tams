@@ -2,7 +2,7 @@
 import BackgroundPattern from '@components/BackgroundPattern.astro';
 import Header from '@components/Header.astro';
 import Footer from '@components/Footer.astro';
-import { ViewTransitions, fade } from 'astro:transitions';
+import { ClientRouter, fade } from 'astro:transitions';
 import CardDani from '@components/CardDani.astro';
 import Ratings from '@components/Ratings.astro';
 import Blob from '@components/Blob.astro';
@@ -26,7 +26,7 @@ const { title, mainWidth = "w-4xl", mainMaxWidth = "max-w-full", showInfo = true
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 		<meta name="generator" content={Astro.generator} />
 		<title>{title}</title>
-		<ViewTransitions />
+		<ClientRouter />
 	</head>
 	<body class="min-h-svh w-screen bg-gray-50 overflow-x-hidden">
 		<BackgroundPattern transition:animate={fade({ duration: '0' })} />
@@ -244,4 +244,31 @@ const { title, mainWidth = "w-4xl", mainMaxWidth = "max-w-full", showInfo = true
 		from { transform: translateX(100%); opacity: 0; }
 		to { transform: translateX(0); opacity: 1; }
 	}
+</style>
+
+<style is:global>
+  pre::-webkit-scrollbar {
+    background-color: #24292e;
+    border-radius: 0.25rem;
+    height: 10px;
+  }
+  
+  pre::-webkit-scrollbar-thumb {
+    background-color: #808080;
+    border-radius: 0.25rem;
+  }
+  
+  pre::-webkit-scrollbar-track {
+    background-color: #24292e;
+    border-radius: 0.25rem;
+  }
+  
+  /* pre {
+    scrollbar-color: #808080 #24292e;
+    scrollbar-width: auto;
+  } */
+  
+  pre .line {
+    white-space: pre !important;
+  }
 </style>
