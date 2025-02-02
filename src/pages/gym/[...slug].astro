@@ -1,0 +1,19 @@
+---
+import { getEntry } from 'astro:content';
+import PostLayout from '@layouts/PostLayout.astro';
+
+const contentFolder = 'gym';
+
+const { slug } = Astro.params;
+const post = await getEntry(contentFolder, slug);
+
+if (!post) {
+  throw new Error(`Post no encontrado: ${slug}`);
+}
+
+const { Content } = await post.render();
+---
+
+<PostLayout frontmatter={post.data} contentFolder={contentFolder}>
+  <Content />
+</PostLayout>

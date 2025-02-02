@@ -6,7 +6,7 @@ import { getCollection } from 'astro:content';
 
 interface Props {
   frontmatter: { title?: string; description?: string; date?: string; tags?: string[]; }
-  contentFolder: "blog" | "tech-concepts";
+  contentFolder: "blog" | "tech-concepts" | "gym";
 }
 
 const { frontmatter, contentFolder } = Astro.props;

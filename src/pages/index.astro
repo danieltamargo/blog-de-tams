@@ -7,10 +7,12 @@ import { format } from 'date-fns';
 const blogs = await getCollection('blog');
 // blogs.sort((a, b) => new Date(b.data.date).getTime() - new Date(a.data.date).getTime());
 
+const gym = await getCollection('gym');
+
 const techConcepts = await getCollection('tech-concepts');
 // techConcepts.sort((a, b) => new Date(b.data.date).getTime() - new Date(a.data.date).getTime());
 
-const allPosts = [...blogs, ...techConcepts];
+const allPosts = [...blogs, ...gym, ...techConcepts];
 allPosts.sort((a, b) => new Date(b.data.date).getTime() - new Date(a.data.date).getTime());
 ---
 
@@ -19,7 +21,13 @@ allPosts.sort((a, b) => new Date(b.data.date).getTime() - new Date(a.data.date).
 
   <div class="space-y-4">
     {allPosts.map((post) => (
-      <article class="p-6 screen-block blob-hoverable">
+      <article 
+      class:list={[ 
+        "px-6 py-10 screen-block blob-hoverable post group",
+        post.collection === 'blog' && 'post-blog',
+        post.collection === 'gym' && 'post-gym',
+        post.collection === 'tech-concepts' && 'post-tech-concepts', 
+      ]}>
         <h2 class="text-3xl font-bold mb-2">
           <a href={`/${post.collection}/${post.slug}`} class="hover:text-blue-600 transition-colors">
             {post.data.title}
@@ -34,7 +42,7 @@ allPosts.sort((a, b) => new Date(b.data.date).getTime() - new Date(a.data.date).
         {post.data.tags && (
           <div class="flex gap-2 flex-wrap">
             {post.data.tags.map((tag: string) => (
-              <span class="bg-gray-100/80 backdrop-blur-sm text-gray-700 px-3 py-1 rounded-full text-sm">
+              <span class="bg-gray-100/80 backdrop-blur-sm text-gray-700 px-3 py-1 rounded-full text-sm group-hover:bg-gray-200 transition-colors pointer-events-none">
                 {tag}
               </span>
             ))}
@@ -44,3 +52,31 @@ allPosts.sort((a, b) => new Date(b.data.date).getTime() - new Date(a.data.date).
     ))}
   </div>
 </Layout>
+
+<style>
+  .post::after {
+    position: absolute;
+    top: 0;
+    right: 0;
+    padding: 0.5rem 1rem;
+    color: white;
+    font-weight: bold;
+    border-radius: 0 0.5rem 0 0.5rem;
+  }
+
+  .post-blog::after {
+    content: 'Blog';
+    background-color: #60a5fa;
+  }
+
+  .post-gym::after {
+    content: 'Gym';
+    background-color: #3eb56a;
+  }
+
+  .post-tech-concepts::after {
+    content: 'Conceptos técnicos';
+    background-color: #9333ea;
+  }
+
+</style>
