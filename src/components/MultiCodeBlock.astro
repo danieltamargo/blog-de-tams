@@ -36,10 +36,10 @@ if (codeBlocks.length > 0) {
     // Seleccionar el primer bloque de código si no existe ningún lenguaje seleccionado
     currentSelectedBlockLang.value = codeBlocks[0].lang;
   
-    Astro.cookies.set('selected-block-lang', currentSelectedBlockLang.value, {
-      maxAge: 31536000,
-      path: '/'
-    });
+    // Astro.cookies.set('selected-block-lang', currentSelectedBlockLang.value, {
+    //   maxAge: 31536000,
+    //   path: '/'
+    // });
   }
 }
 ---
