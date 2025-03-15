@@ -1,21 +1,45 @@
 ---
-import Layout from '@layouts/Layout.astro';
-
+import Layout from "@layouts/Layout.astro";
 ---
+
 <Layout title="Blogsky" showInfo={false}>
   <div class="space-y-4">
-    <div class="relative overflow-hidden py-8 mb-12 screen-block blob-hoverable">
+    <div
+      class="relative overflow-hidden py-8 mb-12 screen-block blob-hoverable"
+      id="coupon-redeem-container"
+    >
       <div class="flex justify-between gap-8 p-4">
-        <div class="w-64">
-
+        <div class="w-64 relative overflow-hidden">
+          <div class="w-full h-full absolute top-0 left-0">
+            <lord-icon
+              id="gift-icon"
+              style="width: 100%; height: 100%; margin: 0 auto; display: block;"
+              trigger="in"
+              delay="200"
+              state="in-reveal"
+              colors="primary:#d1e3fa,secondary:#104891"
+              src="/assets/lottie/gift.json"></lord-icon>
+          </div>
         </div>
         <div class="flex-1">
           <h1 class="text-4xl font-bold mb-4 text-gray-600">Canjear cupón</h1>
           <p class="text-lg">Introduce el código de tu cupón para canjearlo.</p>
           <form id="coupon-redeem-form" class="mt-8">
-            <label for="coupon" class="block text-lg font-semibold">Código del cupón</label>
-            <input type="text" id="coupon" name="coupon" class="w-full mt-2 p-2 border border-gray-300 rounded-md" />
-            <button type="submit" class="mt-4 bg-blue-500 text-white font-semibold py-2 px-4 rounded-md hover:bg-blue-600 transition-colors">Canjear cupón</button>
+            <label for="coupon" class="block text-lg font-semibold"
+              >Código del cupón</label
+            >
+            <input
+              type="text"
+              id="coupon"
+              name="coupon"
+              class="w-full mt-2 p-2 border border-gray-300 rounded-md"
+            />
+            <button
+              type="submit"
+              id="coupon-redeem-button"
+              class="mt-4 bg-blue-500 text-white font-semibold py-2 px-4 rounded-md hover:bg-blue-600 transition-colors"
+              >Canjear cupón</button
+            >
           </form>
         </div>
       </div>
@@ -23,15 +47,75 @@ import Layout from '@layouts/Layout.astro';
   </div>
 </Layout>
 <script type="module">
-  console.log('Hello from the redeem page!');
   const form = document.getElementById("coupon-redeem-form");
   form.addEventListener("submit", (e) => {
     e.preventDefault();
-    const coupon = form.querySelector<HTMLInputElement>("#coupon").value;
+    const coupon = form.querySelector < HTMLInputElement > "#coupon".value;
     window.CustomNotificationManager.addNotification({
       type: "success",
       title: "Cupón canjeado",
       message: `El cupón ${coupon} ha sido canjeado correctamente.`,
     });
+  });
+</script>
+<script>
+  import lottie from "lottie-web";
+  import { defineElement } from "@lordicon/element";
+  defineElement(lottie.loadAnimation);
+
+  document.addEventListener("astro:page-load", () => {
+    const icon = document.getElementById("gift-icon");
+    if (!icon) {
+      return;
+    }
+    console.log("load");
+    const redeemCouponContainer = document.getElementById(
+      "coupon-redeem-container",
+    );
+    const redeemCouponButton = document.getElementById("coupon-redeem-button");
+
+    let animationInProgress = true;
+    let iconState2Timeout = null;
+
+    function squeezeGift() {
+      if (animationInProgress) {
+        return;
+      }
+
+      animationInProgress = true;
+      icon.setAttribute("state", "squeeze");
+      icon.setAttribute("trigger", "in");
+
+      setTimeout(() => {
+        animationInProgress = false;
+      }, 800);
+    }
+
+    function openGift() {
+      redeemCouponContainer.removeEventListener("mouseenter", squeezeGift);
+      redeemCouponButton.removeEventListener("mouseenter", squeezeGift);
+      animationInProgress = true;
+      icon.setAttribute("state", "morph-open");
+      icon.setAttribute("trigger", "in");
+
+      setTimeout(() => {
+        animationInProgress = false;
+      }, 800);
+    }
+
+    iconState2Timeout = setTimeout(() => {
+      animationInProgress = false;
+      icon.removeAttribute("delay");
+      squeezeGift();
+      // setTimeout(() => {
+      //   if (iconState2Timeout) {
+      //     icon.setAttribute("trigger", "hover");
+      //   }
+      // }, 1500);
+    }, 2200);
+
+    redeemCouponContainer.addEventListener("mouseenter", squeezeGift);
+    redeemCouponButton.addEventListener("mouseenter", squeezeGift);
+    redeemCouponButton.addEventListener("click", openGift);
   });
 </script>

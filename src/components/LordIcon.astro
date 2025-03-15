@@ -1,0 +1,28 @@
+---
+interface Props {
+  src: string;
+  trigger?: string;
+  colors?: string;
+  width?: string;
+  height?: string;
+  ariaLabel?: string;
+}
+
+const {
+  src,
+  trigger = "loop",
+  colors,
+  width = "100px",
+  height = "100px",
+  ariaLabel,
+} = Astro.props as Props;
+---
+
+<lord-icon
+  {src}
+  {trigger}
+  {colors}
+  style={`width:<span class="math-inline">\{width\};height\:</span>{height}`}
+  aria-label={ariaLabel}
+>
+</lord-icon>

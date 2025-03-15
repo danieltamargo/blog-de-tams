@@ -16,11 +16,14 @@
     "@astrojs/tailwind": "^5.1.5",
     "@iconify-json/devicon": "^1.2.13",
     "@iconify-json/skill-icons": "^1.2.0",
+    "@lordicon/element": "^1.10.1",
     "@tailwindcss/typography": "^0.5.15",
     "astro": "^5.1.10",
     "astro-icon": "^1.1.5",
     "date-fns": "^3.3.1",
+    "lottie-web": "^5.12.2",
     "shiki": "^1.1.7",
-    "tailwindcss": "^3.4.1"
+    "tailwindcss": "^3.4.1",
+    "three": "^0.173.0"
   }
 }

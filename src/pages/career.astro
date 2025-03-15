@@ -1,6 +1,6 @@
 ---
-import Layout from '@layouts/Layout.astro';
-import { Icon } from 'astro-icon/components'
+import Layout from "@layouts/Layout.astro";
+import { Icon } from "astro-icon/components";
 
 const projects = [
   {
@@ -14,7 +14,17 @@ const projects = [
     Aprendí mucho sobre llevar cómo tener una comunicación clara y estable con el cliente, cómo realizar una toma de requisitos eficaz y documentada<br><br>
 
     En resumen, ¡un proyecto muy completo!<br>Puedes probar la aplicación en <a href="https://app.finamik.com" target="_blank" class="text-[#009BA5] hover:underline">finamik.com</a>.`,
-    tags: [ "Líder de proyecto", "Desarrollo full-stack", "Laravel", "Livewire", "Alpine", "Stripe", "Jira", "Google Captcha v3", "SaaS" ],
+    tags: [
+      "Líder de proyecto",
+      "Desarrollo full-stack",
+      "Laravel",
+      "Livewire",
+      "Alpine",
+      "Stripe",
+      "Jira",
+      "Google Captcha v3",
+      "SaaS",
+    ],
   },
   {
     client: undefined,
@@ -22,15 +32,23 @@ const projects = [
     description: `Scrapear datos de múltiples fuentes (páginas web, APIs, etc) para obtener información, procesarla y almacenarla en una base de datos.<br><br>
 
     Implementar mejoras en una aplicación multiplataforma existente (desarrollada en Flutter) y corregir errores a lo largo de la misma así como de los HTTP Endpoints de la base de datos, además de mejorar la arquitectura de la base de datos para que sea más consistente y ligera y por ende, más eficaz.`,
-    tags: [ "Web scraping", "Automatización", "API", "Flutter", "MongoDB", "Google Maps" ],
+    tags: [
+      "Web scraping",
+      "Automatización",
+      "API",
+      "Flutter",
+      "MongoDB",
+      "Google Maps",
+    ],
   },
   {
     client: undefined,
     name: undefined,
-    description: "Integrar en una aplicación web una pasarela de pago y un sistema de suscripciones, convirtiéndola en un modelo de negocio SaaS.",
-    tags: [ "Stripe", "Integrar servicios de terceros", "SaaS" ],
-  }
-]
+    description:
+      "Integrar en una aplicación web una pasarela de pago y un sistema de suscripciones, convirtiéndola en un modelo de negocio SaaS.",
+    tags: ["Stripe", "Integrar servicios de terceros", "SaaS"],
+  },
+];
 
 const extras = [
   {
@@ -39,7 +57,7 @@ const extras = [
     name: "Profesor de programación",
     nameClasses: "text-gray-700",
     description: `Más de 300 horas como profesor de varios cursos de programación (principalmente Python y Java) enseñando: introducción a la programación, POO, web scraping, automatizaciones, cómo configurar el entorno, ciberseguridad (básico), etc.<br><br>Impartidos tanto de manera presencial como a través de plataformas de formación online.`,
-    tags: [ "Stripe", "Integrar servicios de terceros", "SaaS" ],
+    tags: ["Stripe", "Integrar servicios de terceros", "SaaS"],
   },
   {
     client: "Fomento San Sebastián",
@@ -47,9 +65,9 @@ const extras = [
     name: "Charla de tecnología",
     nameClasses: "text-[#c70808]",
     description: `Impartir la charla "Cómo elegir las herramientas tecnológicas para mi proyecto de emprendimiento" en EKINN para el programa de emprendimiento de Fomento San Sebastián.<br><br>Mostrando múltiples herramientas para impulsar el emprendimiento de PYMES y Startups, y analizando diferentes criterios y enfoques a tener en cuenta a la hora de seleccionarlas.`,
-    tags: [ "Charla", "Tecnología", "Emprendimiento", "PYMES", "Startups" ],
+    tags: ["Charla", "Tecnología", "Emprendimiento", "PYMES", "Startups"],
   },
-]
+];
 
 const sections = [
   {
@@ -63,8 +81,8 @@ const sections = [
     name: "Extras",
     description: "Algunas experiencias adicionales",
     items: extras,
-  }
-]
+  },
+];
 
 const skills = {
   programmingLanguages: [
@@ -198,10 +216,15 @@ const skills = {
       tooltip: "Redis",
     },
   ],
-}
+};
 ---
 
-<Layout title="Mi trayectoria" mainWidth='w-screen' mainMaxWidth={null} showInfo={false}>
+<Layout
+  title="Mi trayectoria"
+  mainWidth="w-screen"
+  mainMaxWidth={null}
+  showInfo={false}
+>
   <div id="career-landing">
     <div id="career-landing-header">
       <p class="opacity-0" aria-hidden="true">Mi trayectoria</p>
@@ -215,99 +238,370 @@ const skills = {
         <div>Mis habilidades</div>
       </div>
     </div>
+
     <div id="career-landing-description">
       <p>
-        Soy un desarrollador de software con nociones de arquitectura y ciberseguridad. Me gusta aprender y experimentar con nuevas tecnologías y técnicas.
-        <br><br>
-        Aquí tienes algunos de mis proyectos, experiencias y habilidades que he adquirido a lo largo de mi carrera.
+        Soy un desarrollador de software con nociones de arquitectura y
+        ciberseguridad. Me gusta aprender y experimentar con nuevas tecnologías
+        y técnicas.
+        <br /><br />
+        Aquí tienes algunos de mis proyectos, experiencias y habilidades que he adquirido
+        a lo largo de mi carrera.
       </p>
     </div>
+
     <div id="career-landing-bottom">
       <p>Scrollea para ver</p>
-      <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-400 animate-bounce" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path>
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        class="h-6 w-6 text-gray-400 animate-bounce"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke="currentColor"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M19 14l-7 7m0 0l-7-7m7 7V3"></path>
+      </svg>
     </div>
   </div>
 
   <div class="space-y-4">
-    <div class="relative py-8 mb-12 screen-block blob-hoverable" id="career-content-wrapper">
+    <div
+      class="relative py-8 mb-12 screen-block blob-hoverable"
+      id="career-content-wrapper"
+    >
       <div id="career-content">
         <!-- Experiencia -->
         <div id="experience">
-          {sections.map((section) => (
-            <div id={section.id} class="career-section">
-              {section.items.map((item) => (
-                <div class="career-card waiting-for-intersection">
-                  <h2 class:list={["text-3xl font-bold", item.nameClasses, item.name === undefined && "text-gray-400"]} >
-                    { item.name ?? "Censurado" }</h2>
-                  <h3 class:list={["text-lg font-bold mb-2", item.clientClasses, item.client === undefined && "text-gray-400"]} >
-                    { item.client ?? "Censurado" }
-                  </h3>
-                  
-                  <p class="text-gray-700" set:html={item.description}></p>
-                  {item.tags && (
-                    <div class="flex gap-2 mt-6 flex-wrap">
-                      {item.tags.map((tech) => (
-                        <span class="bg-gray-100/80 backdrop-blur-sm text-gray-700 px-3 py-1 rounded-full text-sm whitespace-nowrap cursor-default hover:bg-gray-200/80">
-                          {tech}
-                        </span>
-                      ))}
-                    </div>
-                  )}
-                </div>
-              ))}
-            </div>
-          ))}
+          {
+            sections.map((section) => (
+              <div id={section.id} class="career-section">
+                {section.items.map((item) => (
+                  <div class="career-card waiting-for-intersection">
+                    <h2
+                      class:list={[
+                        "text-3xl font-bold",
+                        item.nameClasses,
+                        item.name === undefined && "text-gray-400",
+                      ]}
+                    >
+                      {item.name ?? "Censurado"}
+                    </h2>
+                    <h3
+                      class:list={[
+                        "text-lg font-bold mb-2",
+                        item.clientClasses,
+                        item.client === undefined && "text-gray-400",
+                      ]}
+                    >
+                      {item.client ?? "Censurado"}
+                    </h3>
+
+                    <p class="text-gray-700" set:html={item.description} />
+                    {item.tags && (
+                      <div class="flex gap-2 mt-6 flex-wrap">
+                        {item.tags.map((tech) => (
+                          <span class="bg-gray-100/80 backdrop-blur-sm text-gray-700 px-3 py-1 rounded-full text-sm whitespace-nowrap cursor-default hover:bg-gray-200/80">
+                            {tech}
+                          </span>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </div>
+            ))
+          }
         </div>
         <!-- 
-         <div class="career-section" style="height:10px;padding:10px"></div>
-        <div class="career-section" style="height:10px;padding:10px"></div>
-        <div class="career-section" style="height:10px;padding:10px"></div>
-        <div class="career-section" style="height:10px;padding:10px"></div> 
-        -->
-        
+       <div class="career-section" style="height:10px;padding:10px"></div>
+      <div class="career-section" style="height:10px;padding:10px"></div>
+      <div class="career-section" style="height:10px;padding:10px"></div>
+      <div class="career-section" style="height:10px;padding:10px"></div> 
+      -->
+
         <!-- Skills -->
         <div id="skills" class="group">
           <!-- Loop through all skills -->
-          {Object.entries(skills).map(([category, items]) => (
-            <div class="flex justify-center gap-4 mt-8 group-hover:mt-12 transition-all flex-wrap">
-              {items.map((skill) => (
-                <div class="transition-all opacity-0 blur-lg">
-                  <Icon 
-                  name={skill.icon} 
-                  width={56} 
-                  height={56} 
-                  data-tooltip={skill.tooltip}
-                  class="transition-all group-hover:grayscale hover:!grayscale-0 hover:scale-110"
-                  />
-                </div>
-              ))}
-            </div>
-          ))}
-
+          {
+            Object.entries(skills).map(([category, items]) => (
+              <div class="flex justify-center gap-4 mt-8 group-hover:mt-12 transition-all flex-wrap">
+                {items.map((skill) => (
+                  <div class="transition-all opacity-0 blur-lg">
+                    <Icon
+                      name={skill.icon}
+                      width={56}
+                      height={56}
+                      data-tooltip={skill.tooltip}
+                      class="transition-all group-hover:grayscale hover:!grayscale-0 hover:scale-110"
+                    />
+                  </div>
+                ))}
+              </div>
+            ))
+          }
         </div>
 
-        <!-- Otros -->
+        <!-- Current time -->
+        <div
+          id="current-time"
+          class="flex gap-6 justify-center items-center flex-wrap"
+        >
+          <div class="p-4 font-medium overflow-hidden">
+            <p>
+              <span class="line" style="--line-delay: 1">
+                <span class="text-purple-800">const</span> currentTime = &#123;<br
+                />
+              </span>
 
+              <span class="line" style="--line-delay: 2">
+                <span class="pl-4 text-blue-800">year:</span>
+                <span id="current-time-year" class="text-orange-800">2025</span
+                >,<br />
+              </span>
+
+              <span class="line" style="--line-delay: 3">
+                <span class="pl-4 text-blue-800">month:</span>
+                <span id="current-time-month" class="text-orange-800">10</span
+                >,<br />
+              </span>
+
+              <span class="line" style="--line-delay: 4">
+                <span class="pl-4 text-blue-800">day:</span>
+                <span id="current-time-day" class="text-orange-800">15</span
+                >,<br />
+              </span>
+
+              <span class="line" style="--line-delay: 5">
+                <span class="pl-4 text-blue-800">dayOfWeek:</span>
+                <span id="current-time-day-of-week" class="text-green-800"
+                  >"Friday"</span
+                >,<br />
+              </span>
+
+              <span class="line" style="--line-delay: 6">
+                <span class="pl-4 text-blue-800">hour:</span>
+                <span id="current-time-hour" class="text-orange-800">12</span
+                >,<br />
+              </span>
+
+              <span class="line" style="--line-delay: 7">
+                <span class="pl-4 text-blue-800">minute:</span>
+                <span id="current-time-minute" class="text-orange-800">0</span
+                >,<br />
+              </span>
+
+              <span class="line" style="--line-delay: 8">
+                <span class="pl-4 text-blue-800">second:</span>
+                <span id="current-time-second" class="text-orange-800">0</span
+                >,<br />
+              </span>
+
+              <span class="line" style="--line-delay: 9">
+                <span class="pl-4 text-blue-800">dayProgress:</span>
+                <span id="current-time-day-progress" class="text-orange-800"
+                  >"50%"</span
+                >,
+                <span class="text-gray-400"># %</span>
+                <br />
+              </span>
+
+              <span class="line" style="--line-delay: 1"> } </span>
+            </p>
+          </div>
+
+          <div class="w-full max-w-52">
+            <div
+              class="watch relative max-w-52 max-h-52 w-full h-full aspect-square bg-slate-600 rounded-full overflow-hidden"
+              style="box-shadow: 0 0 12px 4px #ffa889;"
+            >
+              <!-- Aguja hora -->
+              <div
+                id="hour-hand"
+                class="absolute w-full h-full left-0 right-0"
+                style="transform: rotate(0deg);"
+              >
+                <div
+                  class="absolute left-1/2 top-1/2 bg-white transform -translate-y-full -translate-x-1/2"
+                  style="width: 2%; height: 25%;"
+                >
+                </div>
+              </div>
+
+              <!-- Aguja minuto -->
+              <div
+                id="minute-hand"
+                class="absolute w-full h-full left-0 right-0"
+                style="transform: rotate(45deg);"
+              >
+                <div
+                  class="absolute left-1/2 top-1/2 bg-white transform -translate-y-full -translate-x-1/2"
+                  style="width: 1.5%; height: 45%;"
+                >
+                </div>
+              </div>
+
+              <!-- Aguja segundo -->
+              <div
+                id="second-hand"
+                class="absolute w-full h-full left-0 right-0"
+                style="transform: rotate(90deg);"
+              >
+                <div
+                  class="absolute left-1/2 top-1/2 bg-orange-400 transform -translate-y-full -translate-x-1/2"
+                  style="width: 1%; height: 45%;"
+                >
+                </div>
+              </div>
+
+              <!-- Punto en el medio -->
+              <div class="w-full h-full grid place-items-center relative">
+                <div
+                  class="bg-white rounded-full"
+                  style="width: 3%; aspect-ratio: 1/1;"
+                >
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
-  </div>
 
-  <div id="skills-tooltip" class="pointer-events-none fixed top-0 left-0 z-50 p-2 -translate-x-1/2 bg-gray-800 text-white rounded-md hidden">
-    <p class="text-sm">Test</p>
+    <div
+      id="skills-tooltip"
+      class="pointer-events-none fixed top-0 left-0 z-50 p-2 -translate-x-1/2 bg-gray-800 text-white rounded-md hidden"
+    >
+      <p class="text-sm">Test</p>
+    </div>
   </div>
 </Layout>
 
 <script>
+  function rotateHand(hand: HTMLElement, degrees: number) {
+    hand.style.transform = `rotate(${degrees}deg)`;
+  }
+
+  function rotateSecondHand(seconds: number) {
+    const secondHand = document.getElementById("second-hand");
+    const degrees = (seconds / 60) * 360;
+
+    rotateHand(secondHand, degrees);
+  }
+
+  function rotateMinuteHand(seconds: number, minutes: number) {
+    const minuteHand = document.getElementById("minute-hand");
+    const degrees = (minutes + seconds / 60) * 6;
+
+    rotateHand(minuteHand, degrees);
+  }
+
+  function rotateHourHand(minutes: number, hours: number) {
+    const hourHand = document.getElementById("hour-hand");
+    const degrees = (hours + minutes / 60) * 30;
+
+    rotateHand(hourHand, degrees);
+  }
+
+  function setDay(date: Date = new Date()) {
+    const currentTimeDay = document.getElementById("current-time-day");
+    const currentTimeMonth = document.getElementById("current-time-month");
+    const currentTimeYear = document.getElementById("current-time-year");
+    const currentTimeDayOfWeek = document.getElementById(
+      "current-time-day-of-week",
+    );
+
+    const dayOfWeek = new Intl.DateTimeFormat("es-ES", {
+      weekday: "long",
+    }).format(date);
+
+    currentTimeDay.textContent = String(date.getDate());
+    currentTimeMonth.textContent = String(date.getMonth() + 1);
+    currentTimeYear.textContent = String(date.getFullYear());
+    currentTimeDayOfWeek.textContent =
+      '"' + dayOfWeek[0].toUpperCase() + dayOfWeek.slice(1) + '"';
+  }
+
+  function setDayProgress(hours: number, minutes: number, seconds: number) {
+    const totalSeconds = hours * 3600 + minutes * 60 + seconds;
+    const progress = (totalSeconds / (24 * 3600)) * 100;
+
+    const currentTimeDayProgress = document.getElementById(
+      "current-time-day-progress",
+    );
+    currentTimeDayProgress.textContent = progress.toFixed(2);
+  }
+
+  function createCurrentTimeInterval() {
+    const currentTimeSecond = document.getElementById("current-time-second");
+    const currentTimeMinute = document.getElementById("current-time-minute");
+    const currentTimeHour = document.getElementById("current-time-hour");
+
+    const date = new Date();
+    let currentSecond = date.getSeconds();
+    let currentMinute = date.getMinutes();
+    let currentHour = date.getHours();
+
+    currentTimeSecond.textContent = String(currentSecond);
+    currentTimeMinute.textContent = String(currentMinute);
+    currentTimeHour.textContent = String(currentHour);
+
+    setDay(date);
+    setDayProgress(currentHour, currentMinute, currentSecond);
+    rotateSecondHand(currentSecond);
+    rotateMinuteHand(currentSecond, currentMinute);
+    rotateHourHand(currentMinute, currentHour);
+
+    const currentTimeInterval = setInterval(() => {
+      try {
+        currentSecond++;
+        if (currentSecond >= 60) {
+          currentSecond = 0;
+          currentMinute++;
+
+          if (currentMinute >= 60) {
+            currentMinute = 0;
+            currentHour++;
+
+            if (currentHour >= 24) {
+              currentHour = 0;
+            }
+
+            currentTimeHour.textContent = String(currentHour);
+          }
+
+          currentTimeMinute.textContent = String(currentMinute);
+        }
+
+        currentTimeSecond.textContent = String(currentSecond);
+        rotateHourHand(currentMinute, currentHour);
+        rotateMinuteHand(currentSecond, currentMinute);
+        rotateSecondHand(currentSecond);
+        setDayProgress(currentHour, currentMinute, currentSecond);
+      } catch (error) {
+        clearInterval(currentTimeInterval);
+      }
+    }, 1000);
+  }
+
+  createCurrentTimeInterval();
+</script>
+
+<script>
   // Obtener todas las secciones
-  const sections: HTMLDivElement[] = Array.from(document.querySelectorAll<HTMLDivElement>(".career-section"));
+  const sections: HTMLDivElement[] = Array.from(
+    document.querySelectorAll<HTMLDivElement>(".career-section"),
+  );
 
   const hideScrollHint = () => {
     if (window.scrollY > 250) {
       document.getElementById("career-landing-bottom")?.classList.add("hide");
       document.removeEventListener("scroll", hideScrollHint);
     }
-  }
+  };
   document.addEventListener("scroll", hideScrollHint);
 
   document.addEventListener("scroll", () => {
@@ -323,7 +617,7 @@ const skills = {
       if (viewportBottom > sectionTop) {
         const progress = Math.min(
           1,
-          (viewportBottom - sectionTop) / (sectionBottom - sectionTop)
+          (viewportBottom - sectionTop) / (sectionBottom - sectionTop),
         );
 
         // Ajustar el ancho de la línea usando una propiedad CSS personalizada
@@ -342,47 +636,51 @@ const skills = {
       }
     });
   });
-  
+
   const careerCards = document.querySelectorAll(".career-card");
-  const careerCardsObserver = new IntersectionObserver((entries) => {
-    entries.forEach((entry) => {
-      if (entry.isIntersecting) {
-        entry.target.classList.remove("waiting-for-intersection");
-        careerCardsObserver.unobserve(entry.target);
-      }
-    });
-  }, {
-    threshold: 0.5
-  });
+  const careerCardsObserver = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.remove("waiting-for-intersection");
+          careerCardsObserver.unobserve(entry.target);
+        }
+      });
+    },
+    {
+      threshold: 0.5,
+    },
+  );
 
   careerCards.forEach((card) => {
     careerCardsObserver.observe(card);
   });
 
-
   const skills = document.getElementById("skills");
   const skillsIcons = skills.querySelectorAll("[data-tooltip]");
 
-  const skillObserver = new IntersectionObserver((entries) => {
-    entries.forEach((entry) => {
-      if (entry.isIntersecting) {
-        const timeoutTime = 75;
+  const skillObserver = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          const timeoutTime = 75;
 
-        skillsIcons.forEach(( icon: HTMLElement, index: number) => {
-          setTimeout(() => {
-            icon.parentElement.classList.remove("opacity-0");
-            icon.parentElement.classList.remove("blur-lg");
-          }, timeoutTime * index);
-        });
+          skillsIcons.forEach((icon: HTMLElement, index: number) => {
+            setTimeout(() => {
+              icon.parentElement.classList.remove("opacity-0");
+              icon.parentElement.classList.remove("blur-lg");
+            }, timeoutTime * index);
+          });
 
-
-        skillObserver.unobserve(entry.target);
-        skillObserver.disconnect();
-      }
-    });
-  }, {
-    threshold: 0.5
-  });
+          skillObserver.unobserve(entry.target);
+          skillObserver.disconnect();
+        }
+      });
+    },
+    {
+      threshold: 0.5,
+    },
+  );
 
   skillObserver.observe(skills);
 
@@ -395,7 +693,7 @@ const skills = {
       const iconRect = icon.getBoundingClientRect();
 
       skillsTooltip.innerHTML = `<p class="text-sm">${tooltip}</p>`;
-      skillsTooltip.style.top = `${iconRect.top - (iconRect.height / 2) - 15}px`;
+      skillsTooltip.style.top = `${iconRect.top - iconRect.height / 2 - 30}px`;
       skillsTooltip.style.left = `${iconRect.left + iconRect.width / 2}px`;
       skillsTooltip.classList.remove("hidden");
     });
@@ -406,6 +704,23 @@ const skills = {
     });
   });
 
+  const animateObserver = new IntersectionObserver((entries) => {
+    entries.forEach(
+      (entry) => {
+        // add "animate" class to the watch and line elements
+        if (entry.isIntersecting) {
+          entry.target.classList.add("animate");
+          animateObserver.unobserve(entry.target);
+        }
+      },
+      {
+        threshold: 0.5,
+      },
+    );
+  });
+
+  const currentTime = document.getElementById("current-time");
+  animateObserver.observe(currentTime);
 </script>
 
 <style>
@@ -427,7 +742,7 @@ const skills = {
     width: 100%;
     text-align: center;
     font-size: clamp(1rem, 10vw, 8rem);
-    font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+    font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;
   }
   #career-landing-header > *:not([aria-hidden]) {
     position: absolute;
@@ -449,13 +764,15 @@ const skills = {
       -webkit-background-clip: text;
       background-clip: text;
       color: transparent;
-      
+
       animation: career-landing-header-anim 7s infinite alternate;
-      background-image: linear-gradient(90deg, 
-        #33cc33, 
-        #3399ff, 
-        #9900cc, 
-        #ff0000);
+      background-image: linear-gradient(
+        90deg,
+        #33cc33,
+        #3399ff,
+        #9900cc,
+        #ff0000
+      );
       background-size: 400%;
     }
   }
@@ -541,7 +858,7 @@ const skills = {
   #career-content > div {
     padding: 3rem;
   }
-  
+
   #experience {
     max-width: 800px;
     margin: 0 auto;
@@ -569,7 +886,9 @@ const skills = {
     top: 0;
     left: 0;
     border-radius: 8px;
-    transition: height 0.2s ease, width 0.6s ease;
+    transition:
+      height 0.2s ease,
+      width 0.6s ease;
   }
   .career-section:not(:last-of-type)::after {
     height: var(--border-width, 0);
@@ -580,7 +899,9 @@ const skills = {
     bottom: 0;
     left: 0;
     border-radius: 8px;
-    transition: height 0.1s ease, width 0.6s ease;
+    transition:
+      height 0.1s ease,
+      width 0.6s ease;
   }
   .career-section:nth-of-type(even)::before {
     right: 0;
@@ -591,7 +912,7 @@ const skills = {
     left: auto;
   }
   .career-section:not(:first-of-type) {
-    margin-top: -4px; 
+    margin-top: -4px;
   }
 
   .career-card {
@@ -603,5 +924,50 @@ const skills = {
 
   #skills {
     background-color: rgb(226, 245, 255);
+  }
+
+  .line {
+    display: block;
+    opacity: 0;
+  }
+
+  .animate .line {
+    animation: line-slide-in 0.5s ease-in-out forwards;
+    animation-delay: calc(var(--line-delay, 0) * 25ms);
+  }
+
+  .watch {
+    opacity: 0;
+    animation-delay: 100ms;
+  }
+
+  .animate .watch {
+    animation: watch-slide-in 0.5s ease-in-out forwards;
+  }
+
+  @keyframes line-slide-in {
+    0% {
+      transform: translateX(-100px);
+    }
+    50% {
+      opacity: 0;
+    }
+    100% {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+
+  @keyframes watch-slide-in {
+    0% {
+      transform: translateX(100px);
+    }
+    50% {
+      opacity: 0;
+    }
+    100% {
+      opacity: 1;
+      transform: translateX(0);
+    }
   }
 </style>
